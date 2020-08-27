@@ -73,6 +73,7 @@ private:
 
 public:
 
+    GraphicsInstance() {}
 
     GraphicsInstance(const GraphicsInstanceCreateInfo &createInfo);
     static std::vector<std::string> presentValidationLayers();

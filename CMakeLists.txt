@@ -19,6 +19,9 @@ add_executable(vulkan-app
     src/e172vp/hardware.h
     src/e172vp/extensiontools.cpp
     src/e172vp/extensiontools.h
+    src/e172vp/renderer.cpp
+    src/e172vp/renderer.h
+
     src/time/time.h
     src/time/time.cpp
     src/time/elapsedtimer.h

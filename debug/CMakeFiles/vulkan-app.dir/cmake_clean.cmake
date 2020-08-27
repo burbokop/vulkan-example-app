@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/extensiontools.cpp.o"
+  "CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/time/time.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o"

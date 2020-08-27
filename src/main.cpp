@@ -11,22 +11,15 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
-
+#include "e172vp/renderer.h"
 
 int main() {
-    WindowInstance app;
-    VulkanInstance vulkanInstance(app.window());
+    //WindowInstance app;
+    //VulkanInstance vulkanInstance(app.window());
 
-
-    try {
-
-        while (app.alive()) {
-            app.update();
-            vulkanInstance.paint();
-        }
-
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
+    e172vp::Renderer renderer;
+    while (renderer.isAlive()) {
+        renderer.update();
     }
+    return 0;
 }

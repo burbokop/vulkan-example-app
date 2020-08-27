@@ -18,6 +18,12 @@ vk::Queue e172vp::GraphicsInstance::presentQueue() const { return m_presentQueue
 vk::SurfaceFormatKHR e172vp::GraphicsInstance::surfaceFormat() const { return m_surfaceFormat; }
 vk::Extent2D e172vp::GraphicsInstance::extent() const { return m_extent; }
 vk::SwapchainKHR e172vp::GraphicsInstance::swapChain() const { return m_swapChain; }
+vk::CommandPool e172vp::GraphicsInstance::commandPool() const { return m_commandPool; }
+vk::RenderPass e172vp::GraphicsInstance::renderPass() const { return m_renderPass; }
+std::vector<vk::Image> e172vp::GraphicsInstance::swapChainImages() const { return m_swapChainImages; }
+std::vector<vk::ImageView> e172vp::GraphicsInstance::swapChainImageViews() const { return m_swapChainImageViews; }
+std::vector<vk::Framebuffer> e172vp::GraphicsInstance::swapChainFramebuffers() const { return m_swapChainFramebuffers; }
+std::vector<vk::CommandBuffer> e172vp::GraphicsInstance::commandBuffers() const { return m_commandBuffers; }
 
 
 std::string e172vp::GraphicsInstance::nextError() {
@@ -26,25 +32,6 @@ std::string e172vp::GraphicsInstance::nextError() {
     return e;
 }
 
-
-vk::CommandPool e172vp::GraphicsInstance::commandPool() const {
-    return m_commandPool;
-}
-
-vk::RenderPass e172vp::GraphicsInstance::renderPass() const {
-    return m_renderPass;
-}
-
-std::vector<vk::Image> e172vp::GraphicsInstance::swapChainImages() const {
-    return m_swapChainImages;
-}
-
-std::vector<vk::ImageView> e172vp::GraphicsInstance::swapChainImageViews() const {
-    return m_swapChainImageViews;
-}
-
-std::vector<vk::Framebuffer> e172vp::GraphicsInstance::swapChainFramebuffers() const { return m_swapChainFramebuffers; }
-std::vector<vk::CommandBuffer> e172vp::GraphicsInstance::commandBuffers() const { return m_commandBuffers; }
 
 void e172vp::GraphicsInstance::initDebug(vk::Instance instance, VkDebugReportCallbackEXT *c, std::queue<std::string> *error_queue) {
     VkDebugReportCallbackCreateInfoEXT createInfo = {};
@@ -91,11 +78,14 @@ e172vp::GraphicsInstance::LogicDeviceCreationResult e172vp::GraphicsInstance::cr
 
     vk::PhysicalDeviceFeatures deviceFeatures;
 
+    std::vector<const char*> __rme;
+    extensionsFillContainer(requiredDeviceExtensions, __rme);
+
     vk::DeviceCreateInfo createInfo;
     createInfo.setQueueCreateInfoCount(1);
     createInfo.setPQueueCreateInfos(&queueCreateInfo);
     createInfo.setPEnabledFeatures(&deviceFeatures);
-    createInfo.setPEnabledExtensionNames(extensionsToVkArray(requiredDeviceExtensions));
+    createInfo.setPEnabledExtensionNames(__rme);
 
     if(validationLayersEnabled) {
         result.enabledValidationLayers = presentValidationLayers();
@@ -337,9 +327,13 @@ e172vp::GraphicsInstance::GraphicsInstance(const GraphicsInstanceCreateInfo &cre
         return;
     }
 
+
+    std::vector<const char*> __rme;
+    extensionsFillContainer(requiredMergedExtensions, __rme);
+
     vk::InstanceCreateInfo instanceCreateInfo { };
     instanceCreateInfo.setPApplicationInfo(&applicationInfo);
-    instanceCreateInfo.setPEnabledExtensionNames(extensionsToVkArray(requiredMergedExtensions));
+    instanceCreateInfo.setPEnabledExtensionNames(__rme);
     instanceCreateInfo.setEnabledLayerCount(0);
 
     const auto result = vk::createInstance(&instanceCreateInfo, nullptr, &m_vulkanInstance);

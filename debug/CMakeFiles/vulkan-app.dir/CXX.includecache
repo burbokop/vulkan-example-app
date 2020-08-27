@@ -72,6 +72,20 @@ extensiontools.h
 vulkan/vulkan.hpp
 -
 
+/home/viktor/projects/vulkan-app/src/e172vp/renderer.cpp
+renderer.h
+/home/viktor/projects/vulkan-app/src/e172vp/renderer.h
+iostream
+-
+fstream
+-
+
+/home/viktor/projects/vulkan-app/src/e172vp/renderer.h
+graphicsinstance.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
+GLFW/glfw3.h
+-
+
 /home/viktor/projects/vulkan-app/src/main.cpp
 vulkaninstance.h
 /home/viktor/projects/vulkan-app/src/vulkaninstance.h
@@ -89,6 +103,8 @@ cstdlib
 -
 vector
 -
+e172vp/renderer.h
+/home/viktor/projects/vulkan-app/src/e172vp/renderer.h
 
 /home/viktor/projects/vulkan-app/src/queuetools.cpp
 queuetools.h

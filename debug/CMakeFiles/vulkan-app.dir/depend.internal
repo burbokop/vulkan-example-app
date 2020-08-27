@@ -17,7 +17,17 @@ CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/extensiontools.h
  /home/viktor/projects/vulkan-app/src/e172vp/hardware.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/hardware.h
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+ /home/viktor/projects/vulkan-app/src/e172vp/hardware.h
+ /home/viktor/projects/vulkan-app/src/e172vp/renderer.cpp
+ /home/viktor/projects/vulkan-app/src/e172vp/renderer.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+ /home/viktor/projects/vulkan-app/src/e172vp/hardware.h
+ /home/viktor/projects/vulkan-app/src/e172vp/renderer.h
  /home/viktor/projects/vulkan-app/src/main.cpp
  /home/viktor/projects/vulkan-app/src/queuetools.h
  /home/viktor/projects/vulkan-app/src/time/elapsedtimer.h

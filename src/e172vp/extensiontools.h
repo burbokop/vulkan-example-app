@@ -14,6 +14,14 @@ namespace e172vp {
 
 
     vk::ArrayProxyNoTemporaries<const char * const> extensionsToVkArray(const std::vector<std::string> &ext);
+
+    template<typename T>
+    void extensionsFillContainer(const std::vector<std::string> &ext, T& container) {
+        container.resize(ext.size());
+        for(size_t i = 0; i < ext.size(); ++i) {
+            container[i] = ext[i].c_str();
+        }
+    }
     std::string extensionsToString(const std::vector<std::string> &ext);
 }
 #endif // EXTENSIONTOOLS_H

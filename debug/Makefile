@@ -231,6 +231,33 @@ src/e172vp/hardware.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.s
 .PHONY : src/e172vp/hardware.cpp.s
 
+src/e172vp/renderer.o: src/e172vp/renderer.cpp.o
+
+.PHONY : src/e172vp/renderer.o
+
+# target to build an object file
+src/e172vp/renderer.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o
+.PHONY : src/e172vp/renderer.cpp.o
+
+src/e172vp/renderer.i: src/e172vp/renderer.cpp.i
+
+.PHONY : src/e172vp/renderer.i
+
+# target to preprocess a source file
+src/e172vp/renderer.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.i
+.PHONY : src/e172vp/renderer.cpp.i
+
+src/e172vp/renderer.s: src/e172vp/renderer.cpp.s
+
+.PHONY : src/e172vp/renderer.s
+
+# target to generate assembly for a file
+src/e172vp/renderer.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.s
+.PHONY : src/e172vp/renderer.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -414,6 +441,9 @@ help:
 	@echo "... src/e172vp/hardware.o"
 	@echo "... src/e172vp/hardware.i"
 	@echo "... src/e172vp/hardware.s"
+	@echo "... src/e172vp/renderer.o"
+	@echo "... src/e172vp/renderer.i"
+	@echo "... src/e172vp/renderer.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

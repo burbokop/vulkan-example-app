@@ -110,6 +110,12 @@
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/hardware.h">
 			<Option target="vulkan-app"/>
 		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/renderer.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/renderer.h">
+			<Option target="vulkan-app"/>
+		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/main.cpp">
 			<Option target="vulkan-app"/>
 		</Unit>
