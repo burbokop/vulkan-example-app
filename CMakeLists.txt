@@ -11,6 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 add_executable(vulkan-app
+    src/e172vp/graphicsinstance.cpp
+    src/e172vp/graphicsinstance.h
+    src/e172vp/graphicsinstancecreateinfo.cpp
+    src/e172vp/graphicsinstancecreateinfo.h
+    src/e172vp/hardware.cpp
+    src/e172vp/hardware.h
+    src/e172vp/extensiontools.cpp
+    src/e172vp/extensiontools.h
     src/time/time.h
     src/time/time.cpp
     src/time/elapsedtimer.h

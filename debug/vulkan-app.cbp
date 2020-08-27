@@ -86,6 +86,30 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/extensiontools.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/extensiontools.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/hardware.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/hardware.h">
+			<Option target="vulkan-app"/>
+		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/main.cpp">
 			<Option target="vulkan-app"/>
 		</Unit>

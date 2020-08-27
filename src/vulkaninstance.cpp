@@ -5,6 +5,7 @@
 #include <sstream>
 #include <set>
 #include <fstream>
+#include <math.h>
 
 
 VulkanInstance::VulkanInstance(GLFWwindow *window) {
@@ -57,11 +58,12 @@ VulkanInstance::VulkanInstance(GLFWwindow *window) {
     std::cout << "commandBuffers: " << commandBuffers.size() << "\n\n";
 
 
-    proceedCommandBuffers(renderPass, graphicsPipeline, extent, swapChainFramebuffers, commandBuffers);
+
+    proceedCommandBuffers(renderPass, graphicsPipeline, extent, swapChainFramebuffers, commandBuffers, CommandReciept {});
 
 
     elapsedFromStart.reset();
-    updateCommandBuffersTimer.setInterval(4000);
+    updateCommandBuffersTimer.setInterval(500);
     updateCommandBuffersTimer.reset();
 }
 
@@ -69,8 +71,17 @@ VulkanInstance::VulkanInstance(GLFWwindow *window) {
 
 void VulkanInstance::paint() {
     //if(updateCommandBuffersTimer.check()) {
-    //    proceedCommandBuffers(renderPass, graphicsPipeline, extent, swapChainFramebuffers, commandBuffers);
-    //    std::cout << "UPDATE COMMAND BUFFERS" << "\n";
+    //    std::cout << "UPDATING COMMAND BUFFERS" << "\n";
+        resetCommandBuffers(commandBuffers, graphicsQueue, presentQueue);
+
+
+        CommandReciept reciept;
+        reciept.is_valid = true;
+        reciept.x = std::cos(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
+        reciept.y = std::sin(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
+
+        proceedCommandBuffers(renderPass, graphicsPipeline, extent, swapChainFramebuffers, commandBuffers, reciept);
+    //    std::cout << "COMMAND BUFFERS UPDATED" << "\n";
     //}
 
     uint32_t imageIndex = 0;
@@ -444,7 +455,7 @@ void VulkanInstance::createCommandBuffers(VkDevice logicDevice, uint32_t count, 
 
 }
 
-void VulkanInstance::proceedCommandBuffers(VkRenderPass renderPass, VkPipeline pipeline, VkExtent2D extent, std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkCommandBuffer> commandBuffers) {
+void VulkanInstance::proceedCommandBuffers(VkRenderPass renderPass, VkPipeline pipeline, VkExtent2D extent, std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkCommandBuffer> commandBuffers, const CommandReciept &reciept) {
     for (size_t i = 0; i < commandBuffers.size(); i++) {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -453,14 +464,26 @@ void VulkanInstance::proceedCommandBuffers(VkRenderPass renderPass, VkPipeline p
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
+
+        VkClearValue clearColor;
+        VkOffset2D offset;
+        if(reciept.is_valid) {
+            clearColor = { reciept.x, reciept.y, 0.0f, 1.0f };
+            offset = {
+                static_cast<int32_t>(reciept.x * 200),
+                static_cast<int32_t>(reciept.y * 200)
+            };
+        } else {
+            clearColor = { 0.5f, 0.5f, 0.0f, 1.0f };
+            offset = { 0, 0 };
+        }
+
         VkRenderPassBeginInfo renderPassInfo {};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = renderPass;
         renderPassInfo.framebuffer = swapChainFramebuffers[i];
-        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.offset = offset;
         renderPassInfo.renderArea.extent = extent;
-
-        VkClearValue clearColor = { 0.5f, 0.5f, 0.0f, 1.0f };
         renderPassInfo.clearValueCount = 1;
         renderPassInfo.pClearValues = &clearColor;
 
@@ -475,6 +498,15 @@ void VulkanInstance::proceedCommandBuffers(VkRenderPass renderPass, VkPipeline p
         if (vkEndCommandBuffer(commandBuffers.at(i)) != VK_SUCCESS) {
             throw std::runtime_error("failed to record command buffer!");
         }
+    }
+}
+
+void VulkanInstance::resetCommandBuffers(std::vector<VkCommandBuffer> commandBuffers, VkQueue graphicsQueue, VkQueue presentQueue) {
+    vkQueueWaitIdle(graphicsQueue);
+    vkQueueWaitIdle(presentQueue);
+
+    for(auto b : commandBuffers) {
+        vkResetCommandBuffer(b, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
     }
 }
 

@@ -74,6 +74,11 @@ public:
         std::vector<VkSurfaceFormatKHR> formats;
         std::vector<VkPresentModeKHR> presentModes;
     };
+    struct CommandReciept {
+        bool is_valid = false;
+        float x = 0;
+        float y = 0;
+    };
 
 
     VulkanInstance(GLFWwindow *window);
@@ -105,9 +110,10 @@ public:
     static void createCommandPool(VkDevice logicDevice, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkCommandPool *commandPool);
     static void createSyncObjects(VkDevice logicDevice, VkSemaphore *imageAvailableSemaphore, VkSemaphore *renderFinishedSemaphore);
     static VkShaderModule createShaderModule(VkDevice logicDevice, const std::vector<char> &code);
-
     static void createCommandBuffers(VkDevice logicDevice, uint32_t count, VkCommandPool commandPool, std::vector<VkCommandBuffer> *commandBuffers);
-    static void proceedCommandBuffers(VkRenderPass renderPass, VkPipeline pipeline, VkExtent2D extent, std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkCommandBuffer> commandBuffers);
+
+    static void proceedCommandBuffers(VkRenderPass renderPass, VkPipeline pipeline, VkExtent2D extent, std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkCommandBuffer> commandBuffers, const CommandReciept &reciept);
+    static void resetCommandBuffers(std::vector<VkCommandBuffer> commandBuffers, VkQueue, VkQueue presentQueue);
     static void createGraphicsPipeline(VkDevice logicDevice, VkExtent2D extent, VkRenderPass renderPass, VkPipelineLayout *pipelineLayout, VkPipeline *graphicsPipline);
 
     static std::vector<char> readFile(const std::string& filename);
