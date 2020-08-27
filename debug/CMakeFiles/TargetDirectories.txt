@@ -1,0 +1,3 @@
+/home/viktor/projects/vulkan-app/debug/CMakeFiles/rebuild_cache.dir
+/home/viktor/projects/vulkan-app/debug/CMakeFiles/vulkan-app.dir
+/home/viktor/projects/vulkan-app/debug/CMakeFiles/edit_cache.dir
