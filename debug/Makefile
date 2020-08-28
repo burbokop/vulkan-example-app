@@ -123,33 +123,6 @@ vulkan-app/fast:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/build
 .PHONY : vulkan-app/fast
 
-src/e172vp/extensiontools.o: src/e172vp/extensiontools.cpp.o
-
-.PHONY : src/e172vp/extensiontools.o
-
-# target to build an object file
-src/e172vp/extensiontools.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/extensiontools.cpp.o
-.PHONY : src/e172vp/extensiontools.cpp.o
-
-src/e172vp/extensiontools.i: src/e172vp/extensiontools.cpp.i
-
-.PHONY : src/e172vp/extensiontools.i
-
-# target to preprocess a source file
-src/e172vp/extensiontools.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/extensiontools.cpp.i
-.PHONY : src/e172vp/extensiontools.cpp.i
-
-src/e172vp/extensiontools.s: src/e172vp/extensiontools.cpp.s
-
-.PHONY : src/e172vp/extensiontools.s
-
-# target to generate assembly for a file
-src/e172vp/extensiontools.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/extensiontools.cpp.s
-.PHONY : src/e172vp/extensiontools.cpp.s
-
 src/e172vp/graphicsinstance.o: src/e172vp/graphicsinstance.cpp.o
 
 .PHONY : src/e172vp/graphicsinstance.o
@@ -204,33 +177,6 @@ src/e172vp/graphicsinstancecreateinfo.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.s
 .PHONY : src/e172vp/graphicsinstancecreateinfo.cpp.s
 
-src/e172vp/hardware.o: src/e172vp/hardware.cpp.o
-
-.PHONY : src/e172vp/hardware.o
-
-# target to build an object file
-src/e172vp/hardware.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.o
-.PHONY : src/e172vp/hardware.cpp.o
-
-src/e172vp/hardware.i: src/e172vp/hardware.cpp.i
-
-.PHONY : src/e172vp/hardware.i
-
-# target to preprocess a source file
-src/e172vp/hardware.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.i
-.PHONY : src/e172vp/hardware.cpp.i
-
-src/e172vp/hardware.s: src/e172vp/hardware.cpp.s
-
-.PHONY : src/e172vp/hardware.s
-
-# target to generate assembly for a file
-src/e172vp/hardware.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.s
-.PHONY : src/e172vp/hardware.cpp.s
-
 src/e172vp/renderer.o: src/e172vp/renderer.cpp.o
 
 .PHONY : src/e172vp/renderer.o
@@ -257,6 +203,168 @@ src/e172vp/renderer.s: src/e172vp/renderer.cpp.s
 src/e172vp/renderer.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.s
 .PHONY : src/e172vp/renderer.cpp.s
+
+src/e172vp/tools/extensiontools.o: src/e172vp/tools/extensiontools.cpp.o
+
+.PHONY : src/e172vp/tools/extensiontools.o
+
+# target to build an object file
+src/e172vp/tools/extensiontools.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.o
+.PHONY : src/e172vp/tools/extensiontools.cpp.o
+
+src/e172vp/tools/extensiontools.i: src/e172vp/tools/extensiontools.cpp.i
+
+.PHONY : src/e172vp/tools/extensiontools.i
+
+# target to preprocess a source file
+src/e172vp/tools/extensiontools.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.i
+.PHONY : src/e172vp/tools/extensiontools.cpp.i
+
+src/e172vp/tools/extensiontools.s: src/e172vp/tools/extensiontools.cpp.s
+
+.PHONY : src/e172vp/tools/extensiontools.s
+
+# target to generate assembly for a file
+src/e172vp/tools/extensiontools.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.s
+.PHONY : src/e172vp/tools/extensiontools.cpp.s
+
+src/e172vp/tools/hardware.o: src/e172vp/tools/hardware.cpp.o
+
+.PHONY : src/e172vp/tools/hardware.o
+
+# target to build an object file
+src/e172vp/tools/hardware.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/hardware.cpp.o
+.PHONY : src/e172vp/tools/hardware.cpp.o
+
+src/e172vp/tools/hardware.i: src/e172vp/tools/hardware.cpp.i
+
+.PHONY : src/e172vp/tools/hardware.i
+
+# target to preprocess a source file
+src/e172vp/tools/hardware.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/hardware.cpp.i
+.PHONY : src/e172vp/tools/hardware.cpp.i
+
+src/e172vp/tools/hardware.s: src/e172vp/tools/hardware.cpp.s
+
+.PHONY : src/e172vp/tools/hardware.s
+
+# target to generate assembly for a file
+src/e172vp/tools/hardware.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/hardware.cpp.s
+.PHONY : src/e172vp/tools/hardware.cpp.s
+
+src/e172vp/tools/logicdevicefactory.o: src/e172vp/tools/logicdevicefactory.cpp.o
+
+.PHONY : src/e172vp/tools/logicdevicefactory.o
+
+# target to build an object file
+src/e172vp/tools/logicdevicefactory.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o
+.PHONY : src/e172vp/tools/logicdevicefactory.cpp.o
+
+src/e172vp/tools/logicdevicefactory.i: src/e172vp/tools/logicdevicefactory.cpp.i
+
+.PHONY : src/e172vp/tools/logicdevicefactory.i
+
+# target to preprocess a source file
+src/e172vp/tools/logicdevicefactory.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.i
+.PHONY : src/e172vp/tools/logicdevicefactory.cpp.i
+
+src/e172vp/tools/logicdevicefactory.s: src/e172vp/tools/logicdevicefactory.cpp.s
+
+.PHONY : src/e172vp/tools/logicdevicefactory.s
+
+# target to generate assembly for a file
+src/e172vp/tools/logicdevicefactory.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.s
+.PHONY : src/e172vp/tools/logicdevicefactory.cpp.s
+
+src/e172vp/tools/stringvector.o: src/e172vp/tools/stringvector.cpp.o
+
+.PHONY : src/e172vp/tools/stringvector.o
+
+# target to build an object file
+src/e172vp/tools/stringvector.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/stringvector.cpp.o
+.PHONY : src/e172vp/tools/stringvector.cpp.o
+
+src/e172vp/tools/stringvector.i: src/e172vp/tools/stringvector.cpp.i
+
+.PHONY : src/e172vp/tools/stringvector.i
+
+# target to preprocess a source file
+src/e172vp/tools/stringvector.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/stringvector.cpp.i
+.PHONY : src/e172vp/tools/stringvector.cpp.i
+
+src/e172vp/tools/stringvector.s: src/e172vp/tools/stringvector.cpp.s
+
+.PHONY : src/e172vp/tools/stringvector.s
+
+# target to generate assembly for a file
+src/e172vp/tools/stringvector.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/stringvector.cpp.s
+.PHONY : src/e172vp/tools/stringvector.cpp.s
+
+src/e172vp/tools/validation.o: src/e172vp/tools/validation.cpp.o
+
+.PHONY : src/e172vp/tools/validation.o
+
+# target to build an object file
+src/e172vp/tools/validation.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/validation.cpp.o
+.PHONY : src/e172vp/tools/validation.cpp.o
+
+src/e172vp/tools/validation.i: src/e172vp/tools/validation.cpp.i
+
+.PHONY : src/e172vp/tools/validation.i
+
+# target to preprocess a source file
+src/e172vp/tools/validation.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/validation.cpp.i
+.PHONY : src/e172vp/tools/validation.cpp.i
+
+src/e172vp/tools/validation.s: src/e172vp/tools/validation.cpp.s
+
+.PHONY : src/e172vp/tools/validation.s
+
+# target to generate assembly for a file
+src/e172vp/tools/validation.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/validation.cpp.s
+.PHONY : src/e172vp/tools/validation.cpp.s
+
+src/e172vp/tools/vulkaninstancefactory.o: src/e172vp/tools/vulkaninstancefactory.cpp.o
+
+.PHONY : src/e172vp/tools/vulkaninstancefactory.o
+
+# target to build an object file
+src/e172vp/tools/vulkaninstancefactory.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o
+.PHONY : src/e172vp/tools/vulkaninstancefactory.cpp.o
+
+src/e172vp/tools/vulkaninstancefactory.i: src/e172vp/tools/vulkaninstancefactory.cpp.i
+
+.PHONY : src/e172vp/tools/vulkaninstancefactory.i
+
+# target to preprocess a source file
+src/e172vp/tools/vulkaninstancefactory.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.i
+.PHONY : src/e172vp/tools/vulkaninstancefactory.cpp.i
+
+src/e172vp/tools/vulkaninstancefactory.s: src/e172vp/tools/vulkaninstancefactory.cpp.s
+
+.PHONY : src/e172vp/tools/vulkaninstancefactory.s
+
+# target to generate assembly for a file
+src/e172vp/tools/vulkaninstancefactory.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.s
+.PHONY : src/e172vp/tools/vulkaninstancefactory.cpp.s
 
 src/main.o: src/main.cpp.o
 
@@ -429,21 +537,33 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... vulkan-app"
 	@echo "... edit_cache"
-	@echo "... src/e172vp/extensiontools.o"
-	@echo "... src/e172vp/extensiontools.i"
-	@echo "... src/e172vp/extensiontools.s"
 	@echo "... src/e172vp/graphicsinstance.o"
 	@echo "... src/e172vp/graphicsinstance.i"
 	@echo "... src/e172vp/graphicsinstance.s"
 	@echo "... src/e172vp/graphicsinstancecreateinfo.o"
 	@echo "... src/e172vp/graphicsinstancecreateinfo.i"
 	@echo "... src/e172vp/graphicsinstancecreateinfo.s"
-	@echo "... src/e172vp/hardware.o"
-	@echo "... src/e172vp/hardware.i"
-	@echo "... src/e172vp/hardware.s"
 	@echo "... src/e172vp/renderer.o"
 	@echo "... src/e172vp/renderer.i"
 	@echo "... src/e172vp/renderer.s"
+	@echo "... src/e172vp/tools/extensiontools.o"
+	@echo "... src/e172vp/tools/extensiontools.i"
+	@echo "... src/e172vp/tools/extensiontools.s"
+	@echo "... src/e172vp/tools/hardware.o"
+	@echo "... src/e172vp/tools/hardware.i"
+	@echo "... src/e172vp/tools/hardware.s"
+	@echo "... src/e172vp/tools/logicdevicefactory.o"
+	@echo "... src/e172vp/tools/logicdevicefactory.i"
+	@echo "... src/e172vp/tools/logicdevicefactory.s"
+	@echo "... src/e172vp/tools/stringvector.o"
+	@echo "... src/e172vp/tools/stringvector.i"
+	@echo "... src/e172vp/tools/stringvector.s"
+	@echo "... src/e172vp/tools/validation.o"
+	@echo "... src/e172vp/tools/validation.i"
+	@echo "... src/e172vp/tools/validation.s"
+	@echo "... src/e172vp/tools/vulkaninstancefactory.o"
+	@echo "... src/e172vp/tools/vulkaninstancefactory.i"
+	@echo "... src/e172vp/tools/vulkaninstancefactory.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

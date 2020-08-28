@@ -15,12 +15,20 @@ add_executable(vulkan-app
     src/e172vp/graphicsinstance.h
     src/e172vp/graphicsinstancecreateinfo.cpp
     src/e172vp/graphicsinstancecreateinfo.h
-    src/e172vp/hardware.cpp
-    src/e172vp/hardware.h
-    src/e172vp/extensiontools.cpp
-    src/e172vp/extensiontools.h
+    src/e172vp/tools/hardware.cpp
+    src/e172vp/tools/hardware.h
+    src/e172vp/tools/extensiontools.cpp
+    src/e172vp/tools/extensiontools.h
+    src/e172vp/tools/validation.cpp
+    src/e172vp/tools/validation.h
+    src/e172vp/tools/stringvector.cpp
+    src/e172vp/tools/stringvector.h
     src/e172vp/renderer.cpp
     src/e172vp/renderer.h
+    src/e172vp/tools/vulkaninstancefactory.cpp
+    src/e172vp/tools/vulkaninstancefactory.h
+    src/e172vp/tools/logicdevicefactory.cpp
+    src/e172vp/tools/logicdevicefactory.h
 
     src/time/time.h
     src/time/time.cpp

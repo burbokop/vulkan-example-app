@@ -2,8 +2,7 @@
 
 #include <iostream>
 #include <fstream>
-
-#include "extensiontools.h"
+#include "tools/stringvector.h"
 
 
 e172vp::Renderer::Renderer() {
@@ -29,7 +28,7 @@ e172vp::Renderer::Renderer() {
     m_graphicsInstance = GraphicsInstance(createInfo);
 
     if(m_graphicsInstance.debugEnabled())
-        std::cout << "Used validation layers: " << e172vp::to_string(m_graphicsInstance.enabledValidationLayers()) << "\n";
+        std::cout << "Used validation layers: " << StringVector::toString(m_graphicsInstance.enabledValidationLayers()) << "\n";
 
     if(!m_graphicsInstance.isValid())
         std::cout << "GRAPHICS OBJECT IS NOT CREATED BECAUSE OF FOLOWING ERRORS:\n\n";
@@ -161,8 +160,8 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
 
 
         commandBuffers[i].beginRenderPass(&renderPassInfo, vk::SubpassContents::eInline);
-        //commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
-        //commandBuffers[i].draw(3, 1, 0, 0);
+        commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
+        commandBuffers[i].draw(3, 1, 0, 0);
         commandBuffers[i].endRenderPass();
         commandBuffers[i].end();
     }

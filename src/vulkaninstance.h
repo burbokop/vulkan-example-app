@@ -8,73 +8,51 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "time/elapsedtimer.h"
+#include <queue>
+#include <vulkan/vulkan.hpp>
+#include "e172vp/tools/hardware.h"
+
 
 std::ostream &operator<<(std::ostream& stream, const std::vector<std::string>& value);
-
-
-
-//---
-#include <vulkan/vulkan.hpp>
-void cpp_proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipeline pipeline, vk::Extent2D extent, std::vector<vk::Framebuffer> swapChainFramebuffers, std::vector<vk::CommandBuffer> commandBuffers);
-//---
-
-
 
 class VulkanInstance {
     friend class WindowInstance;
 
-    VkInstance vkInstance = VK_NULL_HANDLE;
-    VkSurfaceKHR surface = VK_NULL_HANDLE;
-    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-    VkDevice logicDevice = VK_NULL_HANDLE;
-    VkQueue graphicsQueue = VK_NULL_HANDLE;
-    VkQueue presentQueue = VK_NULL_HANDLE;
-    VkSwapchainKHR swapChain = VK_NULL_HANDLE;
-    VkCommandPool commandPool = VK_NULL_HANDLE;
+    std::queue<std::string> m_errors;
     VkDebugReportCallbackEXT debugReportCallbackEXT = VK_NULL_HANDLE;
-    VkRenderPass renderPass = VK_NULL_HANDLE;
-    VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
-    VkPipeline graphicsPipeline = VK_NULL_HANDLE;
 
-    VkSurfaceFormatKHR surfaceFormat;
-    VkExtent2D extent;
+    vk::Instance vkInstance;
+    vk::SurfaceKHR surface;
+    vk::PhysicalDevice physicalDevice;
+    vk::Device logicalDevice;
+    vk::Queue graphicsQueue;
+    vk::Queue presentQueue;
+    vk::SwapchainKHR swapChain;
+    vk::CommandPool commandPool;
+    vk::RenderPass renderPass;
+    vk::PipelineLayout pipelineLayout;
+    vk::Pipeline graphicsPipeline;
 
-    std::vector<VkImage> swapChainImages;
-    std::vector<VkImageView> swapChainImageViews;
-    std::vector<VkFramebuffer> swapChainFramebuffers;
-    std::vector<VkCommandBuffer> commandBuffers;
-    VkSemaphore imageAvailableSemaphore = VK_NULL_HANDLE;
-    VkSemaphore renderFinishedSemaphore = VK_NULL_HANDLE;
+    vk::SurfaceFormatKHR surfaceFormat;
+    vk::Extent2D extent;
 
-    const std::vector<std::string> instanceExtensions = {
-        VK_EXT_DEBUG_REPORT_EXTENSION_NAME
-    };
+    e172vp::Hardware::QueueFamilies queueFamilies;
+
+    std::vector<vk::Image> swapChainImages;
+    std::vector<vk::ImageView> swapChainImageViews;
+    std::vector<vk::Framebuffer> swapChainFramebuffers;
+    std::vector<vk::CommandBuffer> commandBuffers;
+    vk::Semaphore imageAvailableSemaphore;
+    vk::Semaphore renderFinishedSemaphore;
+
+    const std::vector<std::string> instanceExtensions = {};
 
     const std::vector<std::string> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME
     };
-    const std::vector<std::string> validationLayers = {
-        "VK_LAYER_KHRONOS_validation",
-        "VK_LAYER_LUNARG_gfxreconstruct",
-        "VK_LAYER_LUNARG_device_simulation",
-        "VK_LAYER_LUNARG_api_dump",
-        "VK_LAYER_LUNARG_monitor",
-        "VK_LAYER_LUNARG_screenshot"
-    };
 
     e172::ElapsedTimer elapsedFromStart;
     e172::ElapsedTimer updateCommandBuffersTimer;
-
-
-    static VKAPI_ATTR VkBool32 VKAPI_CALL debugVulkanCallback(
-                    VkDebugReportFlagsEXT flags,
-                    VkDebugReportObjectTypeEXT objType,
-                    uint64_t obj,
-                    size_t location,
-                    int32_t messageCode,
-                    const char* pLayerPrefix,
-                    const char* msg,
-                    void* userData);
 public:
     struct SwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
@@ -91,41 +69,26 @@ public:
     VulkanInstance(GLFWwindow *window);
     void createSurface(GLFWwindow *window);
 
-
     void paint();
 
-    static std::vector<std::string> availableValidationLayers();
-    static void initDebug(VkInstance instance, PFN_vkDebugReportCallbackEXT callback, VkDebugReportCallbackEXT *c);
-    static bool checkValidationLayerSupport(const std::vector<std::string> &validationLayers, std::string *missing = nullptr);
-    static VkPhysicalDevice findPhysicalDevice(VkInstance instance, VkSurfaceKHR surface, const std::vector<std::string> &requiredDeviceExtensions);
-    static QueueTools::QueueFamilyIndices createLogicalDevice(VkDevice *device, VkPhysicalDevice d, VkSurfaceKHR surface, const std::vector<std::string> &requiredDeviceExtensions, const std::vector<std::string> &requiredValidationLayers);
-    static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const std::vector<std::string> &requeredExtensions);
     static std::vector<std::string> glfwExtensions();
-    static std::vector<std::string> mergeExtensions(const std::vector<std::string> &e1, const std::vector<std::string> &e2);
-    static void createInstance(VkInstance *instance, VkApplicationInfo *applicationInfo, const std::vector<std::string> &requiredExtensions);
-    static std::vector<VkPhysicalDevice> physicalDevices(VkInstance instance);
-    static bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface, const std::vector<std::string> &requiredDeviceExtensions);
-    static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
-    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-    static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-    static VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-    static void createSwapChain(VkPhysicalDevice physicalDevice, VkDevice logicDevice, VkSurfaceKHR surface, QueueTools::QueueFamilyIndices queueFamilies, VkSurfaceFormatKHR *surfaceFormat, VkExtent2D *extent, VkSwapchainKHR *swapChain);
-    static void createImages(VkDevice logicDevice, VkSwapchainKHR swapChain, std::vector<VkImage> *swapChainImages);
-    static void createImageViewes(VkDevice logicDevice, const std::vector<VkImage> &swapChainImages, VkFormat swapChainImageFormat, std::vector<VkImageView> *swapChainImageViews);
-    static void createRenderPass(VkDevice logicDevice, VkFormat swapChainImageFormat, VkRenderPass *renderPass);
-    static void createFrameBuffers(VkDevice logicDevice, VkExtent2D extent, VkRenderPass renderPass, const std::vector<VkImageView> &swapChainImageViews, std::vector<VkFramebuffer> *swapChainFramebuffers);
-    static void createCommandPool(VkDevice logicDevice, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkCommandPool *commandPool);
-    static void createSyncObjects(VkDevice logicDevice, VkSemaphore *imageAvailableSemaphore, VkSemaphore *renderFinishedSemaphore);
-    static VkShaderModule createShaderModule(VkDevice logicDevice, const std::vector<char> &code);
-    static void createCommandBuffers(VkDevice logicDevice, uint32_t count, VkCommandPool commandPool, std::vector<VkCommandBuffer> *commandBuffers);
 
-    static void proceedCommandBuffers(VkRenderPass renderPass, VkPipeline pipeline, VkExtent2D extent, std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkCommandBuffer> commandBuffers, const CommandReciept &reciept);
+    static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+    static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
+    static vk::Extent2D chooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
 
-
-
+    static bool createSwapChain(const vk::PhysicalDevice &physicalDevice, const vk::Device &logicalDevice, const vk::SurfaceKHR &surface, const e172vp::Hardware::QueueFamilies &queueFamilies, vk::SurfaceFormatKHR *surfaceFormat, vk::Extent2D *extent, vk::SwapchainKHR *swapChain, std::queue<std::string> *error_queue);
+    static bool createImageViewes(const vk::Device &logicalDevice, const std::vector<vk::Image> &swapChainImages, const vk::Format &swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::queue<std::string> *error_queue);
+    static bool createRenderPass(const vk::Device &logicDevice, const vk::Format &swapChainImageFormat, vk::RenderPass *renderPass, std::queue<std::string> *error_queue);
+    static bool createFrameBuffers(const vk::Device &logicalDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::ImageView> &swapChainImageViews, std::vector<vk::Framebuffer> *swapChainFramebuffers, std::queue<std::string> *error_queue);
+    static bool createCommandPool(const vk::Device &logicDevice, const vk::PhysicalDevice &physicalDevice, const vk::SurfaceKHR &surface, vk::CommandPool *commandPool, std::queue<std::string> *error_queue);
+    static void createSyncObjects(const vk::Device &logicalDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
+    static bool createCommandBuffers(const vk::Device &logicalDevice, uint32_t count, const vk::CommandPool &commandPool, std::vector<vk::CommandBuffer> *commandBuffers, std::queue<std::string> *error_queue);
+    static void proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipeline pipeline, vk::Extent2D extent, std::vector<vk::Framebuffer> swapChainFramebuffers, std::vector<vk::CommandBuffer> commandBuffers);
+    static VkShaderModule createShaderModule(VkDevice logicalDevice, const std::vector<char> &code);
     static void resetCommandBuffers(std::vector<VkCommandBuffer> commandBuffers, VkQueue, VkQueue presentQueue);
-    static void createGraphicsPipeline(VkDevice logicDevice, VkExtent2D extent, VkRenderPass renderPass, VkPipelineLayout *pipelineLayout, VkPipeline *graphicsPipline);
 
+    static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
     static std::vector<char> readFile(const std::string& filename);
 
 

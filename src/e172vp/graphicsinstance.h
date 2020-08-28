@@ -2,7 +2,7 @@
 #define GRAPHICSINSTANCE_H
 
 #include "graphicsinstancecreateinfo.h"
-#include "hardware.h"
+#include "tools/hardware.h"
 
 #include <vulkan/vulkan.hpp>
 #include <queue>
@@ -43,41 +43,21 @@ class GraphicsInstance {
     bool m_isValid = false;
     std::queue<std::string> m_errors;
 
-    static void initDebug(const vk::Instance &instance, VkDebugReportCallbackEXT *c, std::queue<std::string> *error_queue);
 
-public:
-    struct LogicDeviceCreationResult {
-        bool is_valid = false;
-        vk::Device logicalDevice;
-        e172vp::Hardware::QueueFamilies queueFamilies;
-        std::vector<std::string> enabledValidationLayers;
-    };
-private:
-    static LogicDeviceCreationResult createLogicalDevice(const vk::PhysicalDevice &physicalDevice,
-            const vk::SurfaceKHR &surface,
-            const std::vector<std::string> &requiredDeviceExtensions,
-            bool validationLayersEnabled,
-            std::queue<std::string> *error_queue
-            );
 
     static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
     static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
     static vk::Extent2D chooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
-    static bool createSwapChain(const vk::PhysicalDevice &physicalDevice, const vk::Device &logicalDevice, const vk::SurfaceKHR &surface, const Hardware::QueueFamilies &queueFamilies, vk::SurfaceFormatKHR *surfaceFormat, vk::Extent2D *extent, vk::SwapchainKHR *swapChain, std::queue<std::string> *error_queue);
 
+    static bool createSwapChain(const vk::PhysicalDevice &physicalDevice, const vk::Device &logicalDevice, const vk::SurfaceKHR &surface, const Hardware::QueueFamilies &queueFamilies, vk::SurfaceFormatKHR *surfaceFormat, vk::Extent2D *extent, vk::SwapchainKHR *swapChain, std::queue<std::string> *error_queue);
     static bool createImageViewes(const vk::Device &logicDevice, const std::vector<vk::Image> &swapChainImages, const vk::Format &swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::queue<std::string> *error_queue);
     static bool createRenderPass(const vk::Device &logicDevice, const vk::Format &swapChainImageFormat, vk::RenderPass *renderPass, std::queue<std::string> *error_queue);
     static bool createFrameBuffers(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::ImageView> &swapChainImageViews, std::vector<vk::Framebuffer> *swapChainFramebuffers, std::queue<std::string> *error_queue);
     static bool createCommandPool(const vk::Device &logicDevice, const vk::PhysicalDevice &physicalDevice, const vk::SurfaceKHR &surface, vk::CommandPool *commandPool, std::queue<std::string> *error_queue);
     static bool createCommandBuffers(const vk::Device &logicDevice, uint32_t count, const vk::CommandPool &commandPool, std::vector<vk::CommandBuffer> *commandBuffers, std::queue<std::string> *error_queue);
-
 public:
-
     GraphicsInstance() {}
-
-    GraphicsInstance(const GraphicsInstanceCreateInfo &createInfo);
-    static std::vector<std::string> presentValidationLayers();
-
+    GraphicsInstance(const GraphicsInstanceCreateInfo &createInfo);    
 
     vk::Instance vulkanInstance() const;
     vk::PhysicalDevice physicalDevice() const;
