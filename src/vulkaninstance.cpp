@@ -17,6 +17,7 @@ VulkanInstance::VulkanInstance(GLFWwindow *window) {
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_MAKE_VERSION(1, 0, 2);
 
+
     auto glfwExt = glfwExtensions();
     std::cout << "glfw extensions: " << glfwExt << "\n";
     createInstance(&vkInstance, &appInfo, mergeExtensions(glfwExt, instanceExtensions));
@@ -821,4 +822,8 @@ std::ostream &operator<<(std::ostream &stream, const std::vector<std::string> &v
     }
     stream << std::string("]");
     return stream;
+}
+
+void cpp_proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipeline pipeline, vk::Extent2D extent, std::vector<vk::Framebuffer> swapChainFramebuffers, std::vector<vk::CommandBuffer> commandBuffers) {
+
 }

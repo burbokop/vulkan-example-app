@@ -17,6 +17,7 @@ CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.o: ../src/e172vp/extensiontool
 CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.o: ../src/e172vp/hardware.cpp
 CMakeFiles/vulkan-app.dir/src/e172vp/hardware.cpp.o: ../src/e172vp/hardware.h
 
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/extensiontools.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/graphicsinstance.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/graphicsinstancecreateinfo.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/hardware.h

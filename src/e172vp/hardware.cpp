@@ -58,7 +58,7 @@ e172vp::Hardware::QueueFamilies e172vp::Hardware::queryQueueFamilies(const vk::P
 
     int i = 0;
     for (const auto& queueFamily : queueFamilies) {
-        VkBool32 presentSupport = false;
+        vk::Bool32 presentSupport = false;
         physicalDevice.getSurfaceSupportKHR(i, surface, &presentSupport);
 
         if(presentSupport)

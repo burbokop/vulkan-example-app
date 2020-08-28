@@ -44,13 +44,13 @@ vk::ArrayProxyNoTemporaries<const char *const> e172vp::extensionsToVkArray(const
     return f;
 }
 
-std::string e172vp::extensionsToString(const std::vector<std::string> &ext) {
+std::string e172vp::to_string(const std::vector<std::string> &vector) {
     std::stringstream stream;
 
     size_t i = 0;
     stream << std::string("[");
-    for(auto a : ext) {
-        stream << a << ((i == ext.size() - 1) ? std::string() : ", ");
+    for(auto a : vector) {
+        stream << a << ((i == vector.size() - 1) ? std::string() : ", ");
         ++i;
     }
     stream << std::string("]");

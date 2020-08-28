@@ -24,6 +24,7 @@ std::vector<vk::Image> e172vp::GraphicsInstance::swapChainImages() const { retur
 std::vector<vk::ImageView> e172vp::GraphicsInstance::swapChainImageViews() const { return m_swapChainImageViews; }
 std::vector<vk::Framebuffer> e172vp::GraphicsInstance::swapChainFramebuffers() const { return m_swapChainFramebuffers; }
 std::vector<vk::CommandBuffer> e172vp::GraphicsInstance::commandBuffers() const { return m_commandBuffers; }
+bool e172vp::GraphicsInstance::debugEnabled() const { return m_debugEnabled; }
 
 
 std::string e172vp::GraphicsInstance::nextError() {
@@ -33,7 +34,8 @@ std::string e172vp::GraphicsInstance::nextError() {
 }
 
 
-void e172vp::GraphicsInstance::initDebug(vk::Instance instance, VkDebugReportCallbackEXT *c, std::queue<std::string> *error_queue) {
+
+void e172vp::GraphicsInstance::initDebug(const vk::Instance &instance, VkDebugReportCallbackEXT *c, std::queue<std::string> *error_queue) {
     VkDebugReportCallbackCreateInfoEXT createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
     createInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT;
@@ -47,6 +49,8 @@ void e172vp::GraphicsInstance::initDebug(vk::Instance instance, VkDebugReportCal
                 instance,
                 "vkCreateDebugReportCallbackEXT"
                 );
+
+    //std::cout << __PRETTY_FUNCTION__ << "\n";
 
     if(e(instance, &createInfo, nullptr, c) != VK_SUCCESS) {
         error_queue->push("[warning] Debug report callback setup failed.");
@@ -114,7 +118,7 @@ e172vp::GraphicsInstance::LogicDeviceCreationResult e172vp::GraphicsInstance::cr
     return result;
 }
 
-VkSurfaceFormatKHR e172vp::GraphicsInstance::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> &availableFormats) {
+vk::SurfaceFormatKHR e172vp::GraphicsInstance::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> &availableFormats) {
     for (const auto& availableFormat : availableFormats) {
         if (availableFormat.format == vk::Format::eB8G8R8A8Srgb && availableFormat.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear) {
             return availableFormat;
@@ -132,7 +136,7 @@ vk::PresentModeKHR e172vp::GraphicsInstance::chooseSwapPresentMode(const std::ve
     return vk::PresentModeKHR::eFifo;
 }
 
-VkExtent2D e172vp::GraphicsInstance::chooseSwapExtent(const vk::SurfaceCapabilitiesKHR &capabilities) {
+vk::Extent2D e172vp::GraphicsInstance::chooseSwapExtent(const vk::SurfaceCapabilitiesKHR &capabilities) {
     if (capabilities.currentExtent.width != UINT32_MAX) {
         return capabilities.currentExtent;
     } else {
@@ -165,8 +169,8 @@ bool e172vp::GraphicsInstance::createSwapChain(const vk::PhysicalDevice &physica
     createInfo.imageColorSpace = surfaceFormat->colorSpace;
     createInfo.imageExtent = *extent;
     createInfo.imageArrayLayers = 1;
-    createInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
-
+    createInfo.setImageUsage(vk::ImageUsageFlagBits::eColorAttachment);
+    createInfo.setPNext(nullptr);
 
     uint32_t queueFamilyIndices[] = { queueFamilies.graphicsFamily(), queueFamilies.presentFamily()};
 
@@ -178,7 +182,6 @@ bool e172vp::GraphicsInstance::createSwapChain(const vk::PhysicalDevice &physica
         createInfo.imageSharingMode = vk::SharingMode::eExclusive;
         createInfo.queueFamilyIndexCount = 0; // Optional
         createInfo.pQueueFamilyIndices = {}; // Optional
-        std::cout << "[warning] graphics and presentation queue families has same indices.\n";
     }
 
     createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
@@ -190,16 +193,13 @@ bool e172vp::GraphicsInstance::createSwapChain(const vk::PhysicalDevice &physica
     const auto code = logicalDevice.createSwapchainKHR(&createInfo, nullptr, swapChain);
     if (code != vk::Result::eSuccess) {
         error_queue->push("[error] Failed to create swap chain: " + vk::to_string(code));
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
 
-void e172vp::GraphicsInstance::createImages(vk::Device logicDevice, vk::SwapchainKHR swapChain, std::vector<vk::Image> *swapChainImages) {
-    *swapChainImages = logicDevice.getSwapchainImagesKHR(swapChain);
-}
 
-bool e172vp::GraphicsInstance::createImageViewes(vk::Device logicDevice, const std::vector<vk::Image> &swapChainImages, vk::Format swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::queue<std::string> *error_queue) {
+bool e172vp::GraphicsInstance::createImageViewes(const vk::Device &logicDevice, const std::vector<vk::Image> &swapChainImages, const vk::Format &swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::queue<std::string> *error_queue) {
     swapChainImageViews->resize(swapChainImages.size());
     for (size_t i = 0; i < swapChainImages.size(); i++) {
         vk::ImageViewCreateInfo createInfo{};
@@ -225,7 +225,7 @@ bool e172vp::GraphicsInstance::createImageViewes(vk::Device logicDevice, const s
     return true;
 }
 
-void e172vp::GraphicsInstance::createRenderPass(vk::Device logicDevice, vk::Format swapChainImageFormat, vk::RenderPass *renderPass, std::queue<std::string> *error_queue) {
+bool e172vp::GraphicsInstance::createRenderPass(const vk::Device &logicDevice, const vk::Format &swapChainImageFormat, vk::RenderPass *renderPass, std::queue<std::string> *error_queue) {
     vk::AttachmentDescription colorAttachment;
     colorAttachment.format = swapChainImageFormat;
     colorAttachment.samples = vk::SampleCountFlagBits::e1;
@@ -254,11 +254,12 @@ void e172vp::GraphicsInstance::createRenderPass(vk::Device logicDevice, vk::Form
     const auto code = logicDevice.createRenderPass(&renderPassInfo, nullptr, renderPass);
     if (code != vk::Result::eSuccess) {
         error_queue->push("[error] Failed to create render pass: " + vk::to_string(code));
+        return false;
     }
-
+    return true;
 }
 
-void e172vp::GraphicsInstance::createFrameBuffers(vk::Device logicDevice, vk::Extent2D extent, vk::RenderPass renderPass, const std::vector<vk::ImageView> &swapChainImageViews, std::vector<vk::Framebuffer> *swapChainFramebuffers, std::queue<std::string> *error_queue) {
+bool e172vp::GraphicsInstance::createFrameBuffers(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::ImageView> &swapChainImageViews, std::vector<vk::Framebuffer> *swapChainFramebuffers, std::queue<std::string> *error_queue) {
     swapChainFramebuffers->resize(swapChainImageViews.size());
 
     for (size_t i = 0; i < swapChainImageViews.size(); i++) {
@@ -277,11 +278,13 @@ void e172vp::GraphicsInstance::createFrameBuffers(vk::Device logicDevice, vk::Ex
         const auto code = logicDevice.createFramebuffer(&framebufferInfo, nullptr, &swapChainFramebuffers->operator[](i));
         if (code != vk::Result::eSuccess) {
             error_queue->push("[error] Failed to create framebuffer: " + vk::to_string(code));
+            return false;
         }
     }
+    return true;
 }
 
-void e172vp::GraphicsInstance::createCommandPool(vk::Device logicDevice, vk::PhysicalDevice physicalDevice, vk::SurfaceKHR surface, vk::CommandPool *commandPool, std::queue<std::string> *error_queue) {
+bool e172vp::GraphicsInstance::createCommandPool(const vk::Device &logicDevice, const vk::PhysicalDevice &physicalDevice, const vk::SurfaceKHR &surface, vk::CommandPool *commandPool, std::queue<std::string> *error_queue) {
     const auto queueFamilies = Hardware::queryQueueFamilies(physicalDevice, surface);
 
     vk::CommandPoolCreateInfo poolInfo;
@@ -290,10 +293,12 @@ void e172vp::GraphicsInstance::createCommandPool(vk::Device logicDevice, vk::Phy
     auto code = logicDevice.createCommandPool(&poolInfo, nullptr, commandPool);
     if (code != vk::Result::eSuccess) {
         error_queue->push("[error] Failed to create command pool: " + vk::to_string(code));
+        return false;
     }
+    return true;
 }
 
-void e172vp::GraphicsInstance::createCommandBuffers(vk::Device logicDevice, uint32_t count, vk::CommandPool commandPool, std::vector<vk::CommandBuffer> *commandBuffers, std::queue<std::string> *error_queue) {
+bool e172vp::GraphicsInstance::createCommandBuffers(const vk::Device &logicDevice, uint32_t count, const vk::CommandPool &commandPool, std::vector<vk::CommandBuffer> *commandBuffers, std::queue<std::string> *error_queue) {
     commandBuffers->resize(count);
 
     vk::CommandBufferAllocateInfo allocInfo{};
@@ -304,7 +309,9 @@ void e172vp::GraphicsInstance::createCommandBuffers(vk::Device logicDevice, uint
     const auto code = logicDevice.allocateCommandBuffers(&allocInfo, commandBuffers->data());
     if (code != vk::Result::eSuccess) {
         error_queue->push("[error] Failed to allocate command buffers: " + vk::to_string(code));
+        return false;
     }
+    return  true;
 }
 
 
@@ -323,7 +330,7 @@ e172vp::GraphicsInstance::GraphicsInstance(const GraphicsInstanceCreateInfo &cre
     const auto requiredMergedExtensions = mergeExtensions(createInfo.requiredExtensions(), internalRequires);
     const auto missing = missingExtensions(presentExtensions(), requiredMergedExtensions);
     if(missing.size() > 0) {
-        m_errors.push("[error] extensions missing: " + extensionsToString(missing) + ". instance is invalid.");
+        m_errors.push("[error] extensions missing: " + to_string(missing) + ". instance is invalid.");
         return;
     }
 
@@ -336,11 +343,15 @@ e172vp::GraphicsInstance::GraphicsInstance(const GraphicsInstanceCreateInfo &cre
     instanceCreateInfo.setPEnabledExtensionNames(__rme);
     instanceCreateInfo.setEnabledLayerCount(0);
 
+
     const auto result = vk::createInstance(&instanceCreateInfo, nullptr, &m_vulkanInstance);
     if (result != vk::Result::eSuccess) {
         m_errors.push("[error] failed to create instance: " + vk::to_string(result));
         return;
     }
+
+    if(createInfo.debugEnabled())
+        initDebug(m_vulkanInstance, &m_debugReportCallbackObject, &m_errors);
 
     if(createInfo.surfaceCreator()) {
         createInfo.surfaceCreator()(m_vulkanInstance, &m_surface);
@@ -353,9 +364,8 @@ e172vp::GraphicsInstance::GraphicsInstance(const GraphicsInstanceCreateInfo &cre
         return;
     }
 
-    if(createInfo.debugEnabled())
-        initDebug(m_vulkanInstance, &m_debugReportCallbackObject, &m_errors);
 
+    m_debugEnabled = createInfo.debugEnabled();
 
     m_physicalDevice = Hardware::findSuitablePhysicalDevice(m_vulkanInstance, m_surface, createInfo.requiredDeviceExtensions());
     if(!m_physicalDevice) {
@@ -376,13 +386,20 @@ e172vp::GraphicsInstance::GraphicsInstance(const GraphicsInstanceCreateInfo &cre
     m_logicalDevice.getQueue(m_queueFamilies.graphicsFamily(), 0, &m_graphicsQueue);
     m_logicalDevice.getQueue(m_queueFamilies.presentFamily(), 0, &m_presentQueue);
 
-    createSwapChain(m_physicalDevice, m_logicalDevice, m_surface, m_queueFamilies, &m_surfaceFormat, &m_extent, &m_swapChain, &m_errors);
-    createImages(m_logicalDevice, m_swapChain, &m_swapChainImages);
-    createImageViewes(m_logicalDevice, m_swapChainImages, m_surfaceFormat.format, &m_swapChainImageViews, &m_errors);
-    createRenderPass(m_logicalDevice, m_surfaceFormat.format, &m_renderPass, &m_errors);
-    createFrameBuffers(m_logicalDevice, m_extent, m_renderPass, m_swapChainImageViews, &m_swapChainFramebuffers, &m_errors);
-    createCommandPool(m_logicalDevice, m_physicalDevice, m_surface, &m_commandPool, &m_errors);
-    createCommandBuffers(m_logicalDevice, m_swapChainImages.size(), m_commandPool, &m_commandBuffers, &m_errors);
+
+    if(!createSwapChain(m_physicalDevice, m_logicalDevice, m_surface, m_queueFamilies, &m_surfaceFormat, &m_extent, &m_swapChain, &m_errors))
+        return;
+    m_swapChainImages = m_logicalDevice.getSwapchainImagesKHR(m_swapChain);
+    if(!createImageViewes(m_logicalDevice, m_swapChainImages, m_surfaceFormat.format, &m_swapChainImageViews, &m_errors))
+        return;
+    if(!createRenderPass(m_logicalDevice, m_surfaceFormat.format, &m_renderPass, &m_errors))
+        return;
+    if(!createFrameBuffers(m_logicalDevice, m_extent, m_renderPass, m_swapChainImageViews, &m_swapChainFramebuffers, &m_errors))
+        return;
+    if(!createCommandPool(m_logicalDevice, m_physicalDevice, m_surface, &m_commandPool, &m_errors))
+        return;
+    if(!createCommandBuffers(m_logicalDevice, m_swapChainImages.size(), m_commandPool, &m_commandBuffers, &m_errors))
+        return;
 
 
     m_isValid = true;

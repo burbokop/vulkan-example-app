@@ -1,11 +1,6 @@
 #include "vulkaninstance.h"
 #include "windowinstance.h"
 
-#include <vulkan/vulkan.h>
-#define GLFW_INCLUDE_VULKAN
-
-
-#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -14,12 +9,22 @@
 #include "e172vp/renderer.h"
 
 int main() {
-    //WindowInstance app;
-    //VulkanInstance vulkanInstance(app.window());
+    bool c_version = true;
 
-    e172vp::Renderer renderer;
-    while (renderer.isAlive()) {
-        renderer.update();
+    if(c_version) {
+        WindowInstance app;
+        VulkanInstance vulkanInstance(app.window());
+
+        while (app.alive()) {
+            app.update();
+            vulkanInstance.paint();
+        }
+    } else {
+
+        e172vp::Renderer renderer;
+        while (renderer.isAlive()) {
+            renderer.update();
+        }
     }
     return 0;
 }

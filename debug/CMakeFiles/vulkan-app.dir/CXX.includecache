@@ -79,6 +79,8 @@ iostream
 -
 fstream
 -
+extensiontools.h
+/home/viktor/projects/vulkan-app/src/e172vp/extensiontools.h
 
 /home/viktor/projects/vulkan-app/src/e172vp/renderer.h
 graphicsinstance.h
@@ -91,10 +93,6 @@ vulkaninstance.h
 /home/viktor/projects/vulkan-app/src/vulkaninstance.h
 windowinstance.h
 /home/viktor/projects/vulkan-app/src/windowinstance.h
-vulkan/vulkan.h
--
-GLFW/glfw3.h
--
 iostream
 -
 stdexcept
@@ -169,6 +167,8 @@ string
 -
 time/elapsedtimer.h
 /home/viktor/projects/vulkan-app/src/time/elapsedtimer.h
+vulkan/vulkan.hpp
+-
 
 /home/viktor/projects/vulkan-app/src/windowinstance.cpp
 windowinstance.h

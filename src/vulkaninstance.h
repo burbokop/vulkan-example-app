@@ -13,6 +13,13 @@ std::ostream &operator<<(std::ostream& stream, const std::vector<std::string>& v
 
 
 
+//---
+#include <vulkan/vulkan.hpp>
+void cpp_proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipeline pipeline, vk::Extent2D extent, std::vector<vk::Framebuffer> swapChainFramebuffers, std::vector<vk::CommandBuffer> commandBuffers);
+//---
+
+
+
 class VulkanInstance {
     friend class WindowInstance;
 
@@ -113,6 +120,9 @@ public:
     static void createCommandBuffers(VkDevice logicDevice, uint32_t count, VkCommandPool commandPool, std::vector<VkCommandBuffer> *commandBuffers);
 
     static void proceedCommandBuffers(VkRenderPass renderPass, VkPipeline pipeline, VkExtent2D extent, std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkCommandBuffer> commandBuffers, const CommandReciept &reciept);
+
+
+
     static void resetCommandBuffers(std::vector<VkCommandBuffer> commandBuffers, VkQueue, VkQueue presentQueue);
     static void createGraphicsPipeline(VkDevice logicDevice, VkExtent2D extent, VkRenderPass renderPass, VkPipelineLayout *pipelineLayout, VkPipeline *graphicsPipline);
 

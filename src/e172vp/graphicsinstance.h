@@ -14,6 +14,7 @@ namespace e172vp {
 
 class GraphicsInstance {
     VkDebugReportCallbackEXT m_debugReportCallbackObject;
+    bool m_debugEnabled = false;
 
     vk::Instance m_vulkanInstance;
     vk::SurfaceKHR m_surface;
@@ -42,7 +43,7 @@ class GraphicsInstance {
     bool m_isValid = false;
     std::queue<std::string> m_errors;
 
-    static void initDebug(vk::Instance instance, VkDebugReportCallbackEXT *c, std::queue<std::string> *error_queue);
+    static void initDebug(const vk::Instance &instance, VkDebugReportCallbackEXT *c, std::queue<std::string> *error_queue);
 
 public:
     struct LogicDeviceCreationResult {
@@ -59,17 +60,16 @@ private:
             std::queue<std::string> *error_queue
             );
 
-    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+    static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
     static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
-    static VkExtent2D chooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
+    static vk::Extent2D chooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
     static bool createSwapChain(const vk::PhysicalDevice &physicalDevice, const vk::Device &logicalDevice, const vk::SurfaceKHR &surface, const Hardware::QueueFamilies &queueFamilies, vk::SurfaceFormatKHR *surfaceFormat, vk::Extent2D *extent, vk::SwapchainKHR *swapChain, std::queue<std::string> *error_queue);
 
-    static void createImages(vk::Device logicDevice, vk::SwapchainKHR swapChain, std::vector<vk::Image> *swapChainImages);
-    static bool createImageViewes(vk::Device logicDevice, const std::vector<vk::Image> &swapChainImages, vk::Format swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::queue<std::string> *error_queue);
-    static void createRenderPass(vk::Device logicDevice, vk::Format swapChainImageFormat, vk::RenderPass *renderPass, std::queue<std::string> *error_queue);
-    static void createFrameBuffers(vk::Device logicDevice, vk::Extent2D extent, vk::RenderPass renderPass, const std::vector<vk::ImageView> &swapChainImageViews, std::vector<vk::Framebuffer> *swapChainFramebuffers, std::queue<std::string> *error_queue);
-    static void createCommandPool(vk::Device logicDevice, vk::PhysicalDevice physicalDevice, vk::SurfaceKHR surface, vk::CommandPool *commandPool, std::queue<std::string> *error_queue);
-    static void createCommandBuffers(vk::Device logicDevice, uint32_t count, vk::CommandPool commandPool, std::vector<vk::CommandBuffer> *commandBuffers, std::queue<std::string> *error_queue);
+    static bool createImageViewes(const vk::Device &logicDevice, const std::vector<vk::Image> &swapChainImages, const vk::Format &swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::queue<std::string> *error_queue);
+    static bool createRenderPass(const vk::Device &logicDevice, const vk::Format &swapChainImageFormat, vk::RenderPass *renderPass, std::queue<std::string> *error_queue);
+    static bool createFrameBuffers(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::ImageView> &swapChainImageViews, std::vector<vk::Framebuffer> *swapChainFramebuffers, std::queue<std::string> *error_queue);
+    static bool createCommandPool(const vk::Device &logicDevice, const vk::PhysicalDevice &physicalDevice, const vk::SurfaceKHR &surface, vk::CommandPool *commandPool, std::queue<std::string> *error_queue);
+    static bool createCommandBuffers(const vk::Device &logicDevice, uint32_t count, const vk::CommandPool &commandPool, std::vector<vk::CommandBuffer> *commandBuffers, std::queue<std::string> *error_queue);
 
 public:
 
@@ -102,6 +102,7 @@ public:
     std::vector<vk::ImageView> swapChainImageViews() const;
     std::vector<vk::Framebuffer> swapChainFramebuffers() const;
     std::vector<vk::CommandBuffer> commandBuffers() const;
+    bool debugEnabled() const;
 };
 
 }

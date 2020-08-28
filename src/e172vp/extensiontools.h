@@ -22,6 +22,6 @@ namespace e172vp {
             container[i] = ext[i].c_str();
         }
     }
-    std::string extensionsToString(const std::vector<std::string> &ext);
+    std::string to_string(const std::vector<std::string> &vector);
 }
 #endif // EXTENSIONTOOLS_H

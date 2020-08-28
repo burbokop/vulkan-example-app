@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include "graphicsinstance.h"
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 
@@ -26,11 +27,11 @@ public:
 
     };
 
-    static void proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipeline pipeline, vk::Extent2D extent, std::vector<vk::Framebuffer> swapChainFramebuffers, std::vector<vk::CommandBuffer> commandBuffers, const CommandReciept &reciept);
-    static void resetCommandBuffers(std::vector<vk::CommandBuffer> commandBuffers, vk::Queue graphicsQueue, vk::Queue presentQueue);
-    static void createGraphicsPipeline(vk::Device logicDevice, vk::Extent2D extent, vk::RenderPass renderPass, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
-    static void createSyncObjects(vk::Device logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
-    static vk::ShaderModule createShaderModule(vk::Device logicDevice, const std::vector<char> &code);
+    static void proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const CommandReciept &reciept);
+    static void resetCommandBuffers(const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Queue &graphicsQueue, const vk::Queue &presentQueue);
+    static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
+    static void createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
+    static vk::ShaderModule createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code);
 
     static std::vector<char> readFile(const std::string &filename);
 

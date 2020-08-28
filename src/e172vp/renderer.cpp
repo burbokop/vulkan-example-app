@@ -3,6 +3,122 @@
 #include <iostream>
 #include <fstream>
 
+#include "extensiontools.h"
+
+
+e172vp::Renderer::Renderer() {
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    m_window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+
+    GraphicsInstanceCreateInfo createInfo;
+    createInfo.setRequiredExtensions(glfwExtensions());
+    createInfo.setApplicationName("test-app");
+    createInfo.setApplicationVersion(1);
+    createInfo.setDebugEnabled(true);
+    createInfo.setRequiredDeviceExtensions({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+    createInfo.setSurfaceCreator([this](vk::Instance i, vk::SurfaceKHR *s) {
+        VkSurfaceKHR ss;
+        if(glfwCreateWindowSurface(i, m_window, NULL, &ss) != VK_SUCCESS) {
+            throw std::runtime_error("surface creating error");
+        }
+        *s = ss;
+    });
+
+    m_graphicsInstance = GraphicsInstance(createInfo);
+
+    if(m_graphicsInstance.debugEnabled())
+        std::cout << "Used validation layers: " << e172vp::to_string(m_graphicsInstance.enabledValidationLayers()) << "\n";
+
+    if(!m_graphicsInstance.isValid())
+        std::cout << "GRAPHICS OBJECT IS NOT CREATED BECAUSE OF FOLOWING ERRORS:\n\n";
+
+    while (m_graphicsInstance.hasErrors())
+        std::cerr << m_graphicsInstance.nextError() << "\n";
+
+
+
+    createSyncObjects(m_graphicsInstance.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
+    //createGraphicsPipeline(m_graphicsInstance.logicalDevice(), m_graphicsInstance.extent(), m_graphicsInstance.renderPass(), &pipelineLayout, &graphicsPipeline);
+
+
+
+    //resetCommandBuffers(m_graphicsInstance.commandBuffers(), m_graphicsInstance.graphicsQueue(), m_graphicsInstance.presentQueue());
+    proceedCommandBuffers(m_graphicsInstance.renderPass(), graphicsPipeline, m_graphicsInstance.extent(), m_graphicsInstance.swapChainFramebuffers(), m_graphicsInstance.commandBuffers(), CommandReciept());
+
+
+
+}
+
+void e172vp::Renderer::paintPoint(int x, int y) {
+
+}
+
+bool e172vp::Renderer::isAlive() const {
+    glfwPollEvents();
+    return !glfwWindowShouldClose(m_window);
+}
+
+void e172vp::Renderer::update() {
+    //resetCommandBuffers(m_graphicsInstance.commandBuffers(), m_graphicsInstance.graphicsQueue(), m_graphicsInstance.presentQueue());
+
+    //CommandReciept reciept;
+    //reciept.is_valid = true;
+    //reciept.x = std::cos(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
+    //reciept.y = std::sin(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
+
+    //proceedCommandBuffers(m_graphicsInstance.renderPass(), graphicsPipeline, m_graphicsInstance.extent(), m_graphicsInstance.swapChainFramebuffers(), m_graphicsInstance.commandBuffers(), reciept);
+
+    uint32_t imageIndex = 0;
+    vk::Result returnCode;
+
+
+    returnCode = m_graphicsInstance.logicalDevice().acquireNextImageKHR(m_graphicsInstance.swapChain(), UINT64_MAX, imageAvailableSemaphore, {}, &imageIndex);
+    if(returnCode != vk::Result::eSuccess)
+        throw std::runtime_error("acquiring next image failed. code: " + vk::to_string(returnCode));
+
+    vk::Semaphore waitSemaphores[] = { imageAvailableSemaphore };
+    vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
+
+    vk::SubmitInfo submitInfo{};
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+    submitInfo.setCommandBuffers(m_graphicsInstance.commandBuffers()[imageIndex]);
+    submitInfo.setSignalSemaphores(renderFinishedSemaphore);
+    //submitInfo.signalSemaphoreCount = 1;
+    //submitInfo.pSignalSemaphores = signalSemaphores;
+
+
+    std::cout << "\nTRY\n";
+    returnCode = m_graphicsInstance.graphicsQueue().submit(1, &submitInfo, {});
+    std::cout << "SECCESS\n";
+
+
+    if (returnCode != vk::Result::eSuccess)
+        throw std::runtime_error("failed to submit draw command buffer. code: " + vk::to_string(returnCode));
+
+    vk::SwapchainKHR swapChains[] = { m_graphicsInstance.swapChain() };
+
+    vk::PresentInfoKHR presentInfo{};
+    presentInfo.setWaitSemaphores(renderFinishedSemaphore);
+    //presentInfo.waitSemaphoreCount = 1;
+    //presentInfo.pWaitSemaphores = signalSemaphores;
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = swapChains;
+    presentInfo.pImageIndices = &imageIndex;
+    presentInfo.pResults = nullptr; // Optional
+
+    returnCode = m_graphicsInstance.presentQueue().presentKHR(&presentInfo);
+    if(returnCode != vk::Result::eSuccess)
+        throw std::runtime_error("present failed. code: " + vk::to_string(returnCode));
+}
+
+
+
+
+
 
 std::vector<std::string> e172vp::Renderer::glfwExtensions() {
     uint32_t extensionCount = 0;
@@ -17,24 +133,25 @@ std::vector<std::string> e172vp::Renderer::glfwExtensions() {
     return result;
 }
 
-void e172vp::Renderer::proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipeline pipeline, vk::Extent2D extent, std::vector<vk::Framebuffer> swapChainFramebuffers, std::vector<vk::CommandBuffer> commandBuffers, const e172vp::Renderer::CommandReciept &reciept) {
+void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const e172vp::Renderer::CommandReciept &reciept) {
     for (size_t i = 0; i < commandBuffers.size(); i++) {
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        vk::CommandBufferBeginInfo beginInfo;
+        beginInfo.flags = vk::CommandBufferUsageFlagBits::eSimultaneousUse;
+        beginInfo.pNext = nullptr;
+        beginInfo.pInheritanceInfo = nullptr;
 
-        if (vkBeginCommandBuffer(commandBuffers.at(i), &beginInfo) != VK_SUCCESS) {
+        if (commandBuffers[i].begin(&beginInfo) != vk::Result::eSuccess) {
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
 
-        VkClearValue clearColor;
-        VkOffset2D offset;
+        vk::ClearValue clearColor;
+        vk::Offset2D offset;
 
-        clearColor = { 0.5f, 0.5f, 0.0f, 1.0f };
-        offset = { 0, 0 };
+        clearColor = vk::ClearColorValue(std::array<float, 4> { 0.5f, 0.5f, 0.0f, 1.0f });
+        offset = vk::Offset2D(0, 0);
 
-        VkRenderPassBeginInfo renderPassInfo {};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        vk::RenderPassBeginInfo renderPassInfo;
         renderPassInfo.renderPass = renderPass;
         renderPassInfo.framebuffer = swapChainFramebuffers[i];
         renderPassInfo.renderArea.offset = offset;
@@ -43,29 +160,24 @@ void e172vp::Renderer::proceedCommandBuffers(vk::RenderPass renderPass, vk::Pipe
         renderPassInfo.pClearValues = &clearColor;
 
 
-        vkCmdBeginRenderPass(commandBuffers.at(i), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-        vkCmdBindPipeline(commandBuffers.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-        vkCmdDraw(commandBuffers.at(i), 3, 1, 0, 0);
-
-        vkCmdEndRenderPass(commandBuffers.at(i));
-
-        if (vkEndCommandBuffer(commandBuffers.at(i)) != VK_SUCCESS) {
-            throw std::runtime_error("failed to record command buffer!");
-        }
+        commandBuffers[i].beginRenderPass(&renderPassInfo, vk::SubpassContents::eInline);
+        //commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
+        //commandBuffers[i].draw(3, 1, 0, 0);
+        commandBuffers[i].endRenderPass();
+        commandBuffers[i].end();
     }
 }
 
-void e172vp::Renderer::resetCommandBuffers(std::vector<vk::CommandBuffer> commandBuffers, vk::Queue graphicsQueue, vk::Queue presentQueue) {
-    vkQueueWaitIdle(graphicsQueue);
-    vkQueueWaitIdle(presentQueue);
+void e172vp::Renderer::resetCommandBuffers(const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Queue &graphicsQueue, const vk::Queue &presentQueue) {
+    graphicsQueue.waitIdle();
+    presentQueue.waitIdle();
 
     for(auto b : commandBuffers) {
-        vkResetCommandBuffer(b, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
+        b.reset(vk::CommandBufferResetFlagBits::eReleaseResources);
     }
 }
 
-void e172vp::Renderer::createGraphicsPipeline(vk::Device logicDevice, vk::Extent2D extent, vk::RenderPass renderPass, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline) {
+void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline) {
     auto vertShaderCode = readFile("../shaders/vert.spv");
     auto fragShaderCode = readFile("../shaders/frag.spv");
 
@@ -190,7 +302,7 @@ std::vector<char> e172vp::Renderer::readFile(const std::string &filename) {
     return buffer;
 }
 
-void e172vp::Renderer::createSyncObjects(vk::Device logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore) {
+void e172vp::Renderer::createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore) {
     vk::SemaphoreCreateInfo semaphoreInfo;
     if (
             logicDevice.createSemaphore(&semaphoreInfo, nullptr, imageAvailableSemaphore) != vk::Result::eSuccess ||
@@ -199,14 +311,13 @@ void e172vp::Renderer::createSyncObjects(vk::Device logicDevice, vk::Semaphore *
         throw std::runtime_error("failed to create synchronization objects for a frame!");
 }
 
-vk::ShaderModule e172vp::Renderer::createShaderModule(vk::Device logicDevice, const std::vector<char> &code) {
-    VkShaderModuleCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.codeSize = code.size();
-    createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+vk::ShaderModule e172vp::Renderer::createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code) {
+    vk::ShaderModuleCreateInfo createInfo{};
+    createInfo.setCodeSize(code.size());
+    createInfo.setPCode(reinterpret_cast<const uint32_t*>(code.data()));
 
-    VkShaderModule shaderModule;
-    if (vkCreateShaderModule(logicDevice, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+    vk::ShaderModule shaderModule;
+    if (logicDevice.createShaderModule(&createInfo, nullptr, &shaderModule) != vk::Result::eSuccess) {
         throw std::runtime_error("failed to create shader module!");
     }
 
@@ -214,102 +325,6 @@ vk::ShaderModule e172vp::Renderer::createShaderModule(vk::Device logicDevice, co
 }
 
 
-e172vp::Renderer::Renderer() {
-    glfwInit();
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    m_window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
-
-    GraphicsInstanceCreateInfo createInfo;
-    createInfo.setRequiredExtensions(glfwExtensions());
-    createInfo.setApplicationName("test-app");
-    createInfo.setApplicationVersion(1);
-    createInfo.setDebugEnabled(true);
-    createInfo.setRequiredDeviceExtensions({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
-    createInfo.setSurfaceCreator([this](vk::Instance i, vk::SurfaceKHR *s) {
-        VkSurfaceKHR ss;
-        if(glfwCreateWindowSurface(i, m_window, NULL, &ss) != VK_SUCCESS) {
-            throw std::runtime_error("surface creating error");
-        }
-        *s = ss;
-    });
-
-    m_graphicsInstance = GraphicsInstance(createInfo);
-
-    if(!m_graphicsInstance.isValid()) {
-        std::cout << "GRAPHICS OBJECT IS NOT CREATED BECAUSE OF FOLOWING ERRORS:\n\n";
-
-    }
-
-    while (m_graphicsInstance.hasErrors()) {
-        std::cerr << m_graphicsInstance.nextError() << "\n";
-    }
-
-    createSyncObjects(m_graphicsInstance.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
-    createGraphicsPipeline(m_graphicsInstance.logicalDevice(), m_graphicsInstance.extent(), m_graphicsInstance.renderPass(), &pipelineLayout, &graphicsPipeline);
-
-    proceedCommandBuffers(m_graphicsInstance.renderPass(), graphicsPipeline, m_graphicsInstance.extent(), m_graphicsInstance.swapChainFramebuffers(), m_graphicsInstance.commandBuffers(), CommandReciept());
-
-}
-
-void e172vp::Renderer::paintPoint(int x, int y) {
-
-}
-
-bool e172vp::Renderer::isAlive() const {
-    glfwPollEvents();
-    return !glfwWindowShouldClose(m_window);
-}
-
-void e172vp::Renderer::update() {
-    //resetCommandBuffers(m_graphicsInstance.commandBuffers(), m_graphicsInstance.graphicsQueue(), m_graphicsInstance.presentQueue());
-
-    //CommandReciept reciept;
-    //reciept.is_valid = true;
-    //reciept.x = std::cos(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
-    //reciept.y = std::sin(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
-
-    //proceedCommandBuffers(m_graphicsInstance.renderPass(), graphicsPipeline, m_graphicsInstance.extent(), m_graphicsInstance.swapChainFramebuffers(), m_graphicsInstance.commandBuffers(), reciept);
-
-    uint32_t imageIndex = 0;
-    vk::Result returnCode;
-
-    returnCode = m_graphicsInstance.logicalDevice().acquireNextImageKHR(m_graphicsInstance.swapChain(), UINT64_MAX, imageAvailableSemaphore, vk::Fence(), &imageIndex);
-    if(returnCode != vk::Result::eSuccess)
-        throw std::runtime_error("acquiring next image failed. code: " + vk::to_string(returnCode));
-
-    vk::Semaphore waitSemaphores[] = { imageAvailableSemaphore };
-    vk::Semaphore signalSemaphores[] = { renderFinishedSemaphore };
-    vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
-
-    vk::SubmitInfo submitInfo{};
-    submitInfo.waitSemaphoreCount = 1;
-    submitInfo.pWaitSemaphores = waitSemaphores;
-    submitInfo.pWaitDstStageMask = waitStages;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &m_graphicsInstance.commandBuffers()[imageIndex];
-    submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores = signalSemaphores;
-
-
-    returnCode = m_graphicsInstance.graphicsQueue().submit(1, &submitInfo, vk::Fence());
-    if (returnCode != vk::Result::eSuccess)
-        throw std::runtime_error("failed to submit draw command buffer. code: " + vk::to_string(returnCode));
-
-    vk::SwapchainKHR swapChains[] = { m_graphicsInstance.swapChain() };
-
-    vk::PresentInfoKHR presentInfo{};
-    presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores = signalSemaphores;
-    presentInfo.swapchainCount = 1;
-    presentInfo.pSwapchains = swapChains;
-    presentInfo.pImageIndices = &imageIndex;
-    presentInfo.pResults = nullptr; // Optional
-
-    returnCode = m_graphicsInstance.presentQueue().presentKHR(&presentInfo);
-    if(returnCode != vk::Result::eSuccess)
-        throw std::runtime_error("present failed. code: " + vk::to_string(returnCode));
-}
 
 e172vp::GraphicsInstance e172vp::Renderer::graphicsInstance() const {
     return m_graphicsInstance;
