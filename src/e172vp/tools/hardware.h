@@ -27,6 +27,11 @@ struct Hardware {
     static SwapChainSupportDetails querySwapChainSupport(const vk::PhysicalDevice &physicalDevice, vk::SurfaceKHR surface);
     static vk::PhysicalDevice findSuitablePhysicalDevice(const vk::Instance &instance, vk::SurfaceKHR surface, const std::vector<std::string> &requiredDeviceExtensions);
     static QueueFamilies queryQueueFamilies(const vk::PhysicalDevice &physicalDevice, const vk::SurfaceKHR &surface);
+
+    static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+    static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
+    static vk::Extent2D chooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities, vk::Extent2D defaultExtent = vk::Extent2D());
+
 };
 
 }

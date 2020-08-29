@@ -37,7 +37,7 @@ public:
 
     Renderer();
 
-    void paintPoint(int x, int y);
+    //void paintPoint(int x, int y);
     bool isAlive() const;
 
     void update();

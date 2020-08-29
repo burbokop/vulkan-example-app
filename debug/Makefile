@@ -123,6 +123,33 @@ vulkan-app/fast:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/build
 .PHONY : vulkan-app/fast
 
+src/e172vp/commandpool.o: src/e172vp/commandpool.cpp.o
+
+.PHONY : src/e172vp/commandpool.o
+
+# target to build an object file
+src/e172vp/commandpool.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o
+.PHONY : src/e172vp/commandpool.cpp.o
+
+src/e172vp/commandpool.i: src/e172vp/commandpool.cpp.i
+
+.PHONY : src/e172vp/commandpool.i
+
+# target to preprocess a source file
+src/e172vp/commandpool.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.i
+.PHONY : src/e172vp/commandpool.cpp.i
+
+src/e172vp/commandpool.s: src/e172vp/commandpool.cpp.s
+
+.PHONY : src/e172vp/commandpool.s
+
+# target to generate assembly for a file
+src/e172vp/commandpool.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.s
+.PHONY : src/e172vp/commandpool.cpp.s
+
 src/e172vp/graphicsinstance.o: src/e172vp/graphicsinstance.cpp.o
 
 .PHONY : src/e172vp/graphicsinstance.o
@@ -203,6 +230,114 @@ src/e172vp/renderer.s: src/e172vp/renderer.cpp.s
 src/e172vp/renderer.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.s
 .PHONY : src/e172vp/renderer.cpp.s
+
+src/e172vp/renderpass.o: src/e172vp/renderpass.cpp.o
+
+.PHONY : src/e172vp/renderpass.o
+
+# target to build an object file
+src/e172vp/renderpass.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o
+.PHONY : src/e172vp/renderpass.cpp.o
+
+src/e172vp/renderpass.i: src/e172vp/renderpass.cpp.i
+
+.PHONY : src/e172vp/renderpass.i
+
+# target to preprocess a source file
+src/e172vp/renderpass.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.i
+.PHONY : src/e172vp/renderpass.cpp.i
+
+src/e172vp/renderpass.s: src/e172vp/renderpass.cpp.s
+
+.PHONY : src/e172vp/renderpass.s
+
+# target to generate assembly for a file
+src/e172vp/renderpass.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.s
+.PHONY : src/e172vp/renderpass.cpp.s
+
+src/e172vp/swapchain.o: src/e172vp/swapchain.cpp.o
+
+.PHONY : src/e172vp/swapchain.o
+
+# target to build an object file
+src/e172vp/swapchain.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o
+.PHONY : src/e172vp/swapchain.cpp.o
+
+src/e172vp/swapchain.i: src/e172vp/swapchain.cpp.i
+
+.PHONY : src/e172vp/swapchain.i
+
+# target to preprocess a source file
+src/e172vp/swapchain.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.i
+.PHONY : src/e172vp/swapchain.cpp.i
+
+src/e172vp/swapchain.s: src/e172vp/swapchain.cpp.s
+
+.PHONY : src/e172vp/swapchain.s
+
+# target to generate assembly for a file
+src/e172vp/swapchain.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.s
+.PHONY : src/e172vp/swapchain.cpp.s
+
+src/e172vp/time/elapsedtimer.o: src/e172vp/time/elapsedtimer.cpp.o
+
+.PHONY : src/e172vp/time/elapsedtimer.o
+
+# target to build an object file
+src/e172vp/time/elapsedtimer.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o
+.PHONY : src/e172vp/time/elapsedtimer.cpp.o
+
+src/e172vp/time/elapsedtimer.i: src/e172vp/time/elapsedtimer.cpp.i
+
+.PHONY : src/e172vp/time/elapsedtimer.i
+
+# target to preprocess a source file
+src/e172vp/time/elapsedtimer.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.i
+.PHONY : src/e172vp/time/elapsedtimer.cpp.i
+
+src/e172vp/time/elapsedtimer.s: src/e172vp/time/elapsedtimer.cpp.s
+
+.PHONY : src/e172vp/time/elapsedtimer.s
+
+# target to generate assembly for a file
+src/e172vp/time/elapsedtimer.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.s
+.PHONY : src/e172vp/time/elapsedtimer.cpp.s
+
+src/e172vp/time/time.o: src/e172vp/time/time.cpp.o
+
+.PHONY : src/e172vp/time/time.o
+
+# target to build an object file
+src/e172vp/time/time.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o
+.PHONY : src/e172vp/time/time.cpp.o
+
+src/e172vp/time/time.i: src/e172vp/time/time.cpp.i
+
+.PHONY : src/e172vp/time/time.i
+
+# target to preprocess a source file
+src/e172vp/time/time.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.i
+.PHONY : src/e172vp/time/time.cpp.i
+
+src/e172vp/time/time.s: src/e172vp/time/time.cpp.s
+
+.PHONY : src/e172vp/time/time.s
+
+# target to generate assembly for a file
+src/e172vp/time/time.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.s
+.PHONY : src/e172vp/time/time.cpp.s
 
 src/e172vp/tools/extensiontools.o: src/e172vp/tools/extensiontools.cpp.o
 
@@ -393,141 +528,6 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/queuetools.o: src/queuetools.cpp.o
-
-.PHONY : src/queuetools.o
-
-# target to build an object file
-src/queuetools.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o
-.PHONY : src/queuetools.cpp.o
-
-src/queuetools.i: src/queuetools.cpp.i
-
-.PHONY : src/queuetools.i
-
-# target to preprocess a source file
-src/queuetools.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/queuetools.cpp.i
-.PHONY : src/queuetools.cpp.i
-
-src/queuetools.s: src/queuetools.cpp.s
-
-.PHONY : src/queuetools.s
-
-# target to generate assembly for a file
-src/queuetools.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/queuetools.cpp.s
-.PHONY : src/queuetools.cpp.s
-
-src/time/elapsedtimer.o: src/time/elapsedtimer.cpp.o
-
-.PHONY : src/time/elapsedtimer.o
-
-# target to build an object file
-src/time/elapsedtimer.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o
-.PHONY : src/time/elapsedtimer.cpp.o
-
-src/time/elapsedtimer.i: src/time/elapsedtimer.cpp.i
-
-.PHONY : src/time/elapsedtimer.i
-
-# target to preprocess a source file
-src/time/elapsedtimer.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.i
-.PHONY : src/time/elapsedtimer.cpp.i
-
-src/time/elapsedtimer.s: src/time/elapsedtimer.cpp.s
-
-.PHONY : src/time/elapsedtimer.s
-
-# target to generate assembly for a file
-src/time/elapsedtimer.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.s
-.PHONY : src/time/elapsedtimer.cpp.s
-
-src/time/time.o: src/time/time.cpp.o
-
-.PHONY : src/time/time.o
-
-# target to build an object file
-src/time/time.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/time.cpp.o
-.PHONY : src/time/time.cpp.o
-
-src/time/time.i: src/time/time.cpp.i
-
-.PHONY : src/time/time.i
-
-# target to preprocess a source file
-src/time/time.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/time.cpp.i
-.PHONY : src/time/time.cpp.i
-
-src/time/time.s: src/time/time.cpp.s
-
-.PHONY : src/time/time.s
-
-# target to generate assembly for a file
-src/time/time.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/time.cpp.s
-.PHONY : src/time/time.cpp.s
-
-src/vulkaninstance.o: src/vulkaninstance.cpp.o
-
-.PHONY : src/vulkaninstance.o
-
-# target to build an object file
-src/vulkaninstance.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o
-.PHONY : src/vulkaninstance.cpp.o
-
-src/vulkaninstance.i: src/vulkaninstance.cpp.i
-
-.PHONY : src/vulkaninstance.i
-
-# target to preprocess a source file
-src/vulkaninstance.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.i
-.PHONY : src/vulkaninstance.cpp.i
-
-src/vulkaninstance.s: src/vulkaninstance.cpp.s
-
-.PHONY : src/vulkaninstance.s
-
-# target to generate assembly for a file
-src/vulkaninstance.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.s
-.PHONY : src/vulkaninstance.cpp.s
-
-src/windowinstance.o: src/windowinstance.cpp.o
-
-.PHONY : src/windowinstance.o
-
-# target to build an object file
-src/windowinstance.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o
-.PHONY : src/windowinstance.cpp.o
-
-src/windowinstance.i: src/windowinstance.cpp.i
-
-.PHONY : src/windowinstance.i
-
-# target to preprocess a source file
-src/windowinstance.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.i
-.PHONY : src/windowinstance.cpp.i
-
-src/windowinstance.s: src/windowinstance.cpp.s
-
-.PHONY : src/windowinstance.s
-
-# target to generate assembly for a file
-src/windowinstance.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.s
-.PHONY : src/windowinstance.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -537,6 +537,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... vulkan-app"
 	@echo "... edit_cache"
+	@echo "... src/e172vp/commandpool.o"
+	@echo "... src/e172vp/commandpool.i"
+	@echo "... src/e172vp/commandpool.s"
 	@echo "... src/e172vp/graphicsinstance.o"
 	@echo "... src/e172vp/graphicsinstance.i"
 	@echo "... src/e172vp/graphicsinstance.s"
@@ -546,6 +549,18 @@ help:
 	@echo "... src/e172vp/renderer.o"
 	@echo "... src/e172vp/renderer.i"
 	@echo "... src/e172vp/renderer.s"
+	@echo "... src/e172vp/renderpass.o"
+	@echo "... src/e172vp/renderpass.i"
+	@echo "... src/e172vp/renderpass.s"
+	@echo "... src/e172vp/swapchain.o"
+	@echo "... src/e172vp/swapchain.i"
+	@echo "... src/e172vp/swapchain.s"
+	@echo "... src/e172vp/time/elapsedtimer.o"
+	@echo "... src/e172vp/time/elapsedtimer.i"
+	@echo "... src/e172vp/time/elapsedtimer.s"
+	@echo "... src/e172vp/time/time.o"
+	@echo "... src/e172vp/time/time.i"
+	@echo "... src/e172vp/time/time.s"
 	@echo "... src/e172vp/tools/extensiontools.o"
 	@echo "... src/e172vp/tools/extensiontools.i"
 	@echo "... src/e172vp/tools/extensiontools.s"
@@ -567,21 +582,6 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/queuetools.o"
-	@echo "... src/queuetools.i"
-	@echo "... src/queuetools.s"
-	@echo "... src/time/elapsedtimer.o"
-	@echo "... src/time/elapsedtimer.i"
-	@echo "... src/time/elapsedtimer.s"
-	@echo "... src/time/time.o"
-	@echo "... src/time/time.i"
-	@echo "... src/time/time.s"
-	@echo "... src/vulkaninstance.o"
-	@echo "... src/vulkaninstance.i"
-	@echo "... src/vulkaninstance.s"
-	@echo "... src/windowinstance.o"
-	@echo "... src/windowinstance.i"
-	@echo "... src/windowinstance.s"
 .PHONY : help
 
 

@@ -86,6 +86,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/commandpool.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/commandpool.h">
+			<Option target="vulkan-app"/>
+		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.cpp">
 			<Option target="vulkan-app"/>
 		</Unit>
@@ -102,6 +108,30 @@
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/renderer.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/renderpass.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/renderpass.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/swapchain.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/swapchain.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/time/time.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/time/time.h">
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/tools/extensiontools.cpp">
@@ -141,36 +171,6 @@
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/main.cpp">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/queuetools.cpp">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/queuetools.h">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/time/elapsedtimer.cpp">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/time/elapsedtimer.h">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/time/time.cpp">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/time/time.h">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/vulkaninstance.cpp">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/vulkaninstance.h">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/windowinstance.cpp">
-			<Option target="vulkan-app"/>
-		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/windowinstance.h">
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/CMakeLists.txt">

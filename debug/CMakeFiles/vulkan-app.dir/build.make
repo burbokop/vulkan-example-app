@@ -273,124 +273,124 @@ CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o.provides: CM
 CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o
 
 
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.o: ../src/time/time.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/vulkan-app.dir/src/time/time.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/time/time.cpp.o -c /home/viktor/projects/vulkan-app/src/time/time.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o: ../src/e172vp/swapchain.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o -c /home/viktor/projects/vulkan-app/src/e172vp/swapchain.cpp
 
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/time/time.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/time/time.cpp > CMakeFiles/vulkan-app.dir/src/time/time.cpp.i
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/e172vp/swapchain.cpp > CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.i
 
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/time/time.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/time/time.cpp -o CMakeFiles/vulkan-app.dir/src/time/time.cpp.s
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/e172vp/swapchain.cpp -o CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.s
 
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.requires:
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.requires:
 
-.PHONY : CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.requires
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.requires
 
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.requires
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.provides.build
-.PHONY : CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.provides
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.requires
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.provides.build
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.provides
 
-CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/time/time.cpp.o
-
-
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o: ../src/time/elapsedtimer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o -c /home/viktor/projects/vulkan-app/src/time/elapsedtimer.cpp
-
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/time/elapsedtimer.cpp > CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.i
-
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/time/elapsedtimer.cpp -o CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.s
-
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.requires:
-
-.PHONY : CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.requires
-
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.requires
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.provides.build
-.PHONY : CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.provides
-
-CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o
+CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o
 
 
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o: ../src/queuetools.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o -c /home/viktor/projects/vulkan-app/src/queuetools.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o: ../src/e172vp/renderpass.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o -c /home/viktor/projects/vulkan-app/src/e172vp/renderpass.cpp
 
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/queuetools.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/queuetools.cpp > CMakeFiles/vulkan-app.dir/src/queuetools.cpp.i
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/e172vp/renderpass.cpp > CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.i
 
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/queuetools.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/queuetools.cpp -o CMakeFiles/vulkan-app.dir/src/queuetools.cpp.s
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/e172vp/renderpass.cpp -o CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.s
 
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.requires:
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.requires:
 
-.PHONY : CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.requires
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.requires
 
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.requires
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.provides.build
-.PHONY : CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.provides
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.requires
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.provides.build
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.provides
 
-CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o
-
-
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o: ../src/windowinstance.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o -c /home/viktor/projects/vulkan-app/src/windowinstance.cpp
-
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/windowinstance.cpp > CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.i
-
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/windowinstance.cpp -o CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.s
-
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.requires:
-
-.PHONY : CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.requires
-
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.requires
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.provides.build
-.PHONY : CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.provides
-
-CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o
+CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o
 
 
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o: ../src/vulkaninstance.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o -c /home/viktor/projects/vulkan-app/src/vulkaninstance.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o: ../src/e172vp/commandpool.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o -c /home/viktor/projects/vulkan-app/src/e172vp/commandpool.cpp
 
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/vulkaninstance.cpp > CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.i
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/e172vp/commandpool.cpp > CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.i
 
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/vulkaninstance.cpp -o CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.s
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/e172vp/commandpool.cpp -o CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.s
 
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.requires:
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.requires:
 
-.PHONY : CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.requires
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.requires
 
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.requires
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.provides.build
-.PHONY : CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.provides
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.requires
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.provides.build
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.provides
 
-CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o
+CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o
+
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o: ../src/e172vp/time/time.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o -c /home/viktor/projects/vulkan-app/src/e172vp/time/time.cpp
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/e172vp/time/time.cpp > CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.i
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/e172vp/time/time.cpp -o CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.s
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.requires:
+
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.requires
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.requires
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.provides.build
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.provides
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o
+
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o: ../src/e172vp/time/elapsedtimer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/viktor/projects/vulkan-app/debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o -c /home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.cpp
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.cpp > CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.i
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.cpp -o CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.s
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.requires:
+
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.requires
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.provides: CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.requires
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.provides.build
+.PHONY : CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.provides
+
+CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.provides.build: CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o
 
 
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: CMakeFiles/vulkan-app.dir/flags.make
@@ -428,11 +428,11 @@ vulkan__app_OBJECTS = \
 "CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o" \
 "CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o" \
 "CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o" \
-"CMakeFiles/vulkan-app.dir/src/time/time.cpp.o" \
-"CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o" \
-"CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o" \
-"CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o" \
-"CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o" \
+"CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o" \
+"CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o" \
+"CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o" \
+"CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o" \
+"CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o" \
 "CMakeFiles/vulkan-app.dir/src/main.cpp.o"
 
 # External object files for target vulkan-app
@@ -447,11 +447,11 @@ vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/tools/stringvector.cpp.o
 vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o
 vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o
 vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o
-vulkan-app: CMakeFiles/vulkan-app.dir/src/time/time.cpp.o
-vulkan-app: CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o
-vulkan-app: CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o
-vulkan-app: CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o
-vulkan-app: CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o
+vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o
+vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o
+vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o
+vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o
+vulkan-app: CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o
 vulkan-app: CMakeFiles/vulkan-app.dir/src/main.cpp.o
 vulkan-app: CMakeFiles/vulkan-app.dir/build.make
 vulkan-app: /usr/lib/x86_64-linux-gnu/libvulkan.so
@@ -474,11 +474,11 @@ CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/tools/s
 CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o.requires
 CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o.requires
 CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/tools/logicdevicefactory.cpp.o.requires
-CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/time/time.cpp.o.requires
-CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/time/elapsedtimer.cpp.o.requires
-CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/queuetools.cpp.o.requires
-CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/windowinstance.cpp.o.requires
-CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/vulkaninstance.cpp.o.requires
+CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o.requires
+CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o.requires
+CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o.requires
+CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o.requires
+CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o.requires
 CMakeFiles/vulkan-app.dir/requires: CMakeFiles/vulkan-app.dir/src/main.cpp.o.requires
 
 .PHONY : CMakeFiles/vulkan-app.dir/requires

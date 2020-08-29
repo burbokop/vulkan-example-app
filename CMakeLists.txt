@@ -29,17 +29,17 @@ add_executable(vulkan-app
     src/e172vp/tools/vulkaninstancefactory.h
     src/e172vp/tools/logicdevicefactory.cpp
     src/e172vp/tools/logicdevicefactory.h
+    src/e172vp/swapchain.cpp
+    src/e172vp/swapchain.h
+    src/e172vp/renderpass.cpp
+    src/e172vp/renderpass.h
+    src/e172vp/commandpool.cpp
+    src/e172vp/commandpool.h
 
-    src/time/time.h
-    src/time/time.cpp
-    src/time/elapsedtimer.h
-    src/time/elapsedtimer.cpp
-    src/queuetools.h
-    src/windowinstance.h
-    src/vulkaninstance.h
-    src/queuetools.cpp
-    src/windowinstance.cpp
-    src/vulkaninstance.cpp
+    src/e172vp/time/time.h
+    src/e172vp/time/time.cpp
+    src/e172vp/time/elapsedtimer.h
+    src/e172vp/time/elapsedtimer.cpp
     src/main.cpp
     )
 
