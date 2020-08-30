@@ -8,6 +8,10 @@
 
 ubuntu: `sudo apt-get install libglfw3 libglfw3-dev`
 
+### Vulkan SDK
+
+https://vulkan.lunarg.com
+
 
 # vkQueueSubmit crash
 
