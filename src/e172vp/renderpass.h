@@ -19,6 +19,7 @@ public:
     RenderPass(const vk::Device &logicalDevice, const SwapChain &swapchain);
     vk::RenderPass renderPathHandle() const;
     operator vk::RenderPass() const;
+    operator VkRenderPass() const;
     std::vector<std::string> pullErrors();
     bool isValid() const;
 

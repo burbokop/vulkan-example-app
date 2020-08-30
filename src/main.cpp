@@ -4,7 +4,7 @@
 int main() {
     e172vp::Renderer renderer;
     while (renderer.isAlive()) {
-        renderer.update();
+        renderer.applyPresentation();
     }
     return 0;
 }

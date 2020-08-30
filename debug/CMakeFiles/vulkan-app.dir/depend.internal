@@ -5,11 +5,11 @@ CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/commandpool.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/commandpool.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/hardware.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/commandpool.h
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.cpp
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.cpp
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
  /home/viktor/projects/vulkan-app/src/e172vp/renderpass.h
  /home/viktor/projects/vulkan-app/src/e172vp/swapchain.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/extensiontools.h
@@ -18,19 +18,22 @@ CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/tools/stringvector.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/validation.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/vulkaninstancefactory.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.o
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.cpp
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.o
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.cpp
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/commandpool.h
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
  /home/viktor/projects/vulkan-app/src/e172vp/renderer.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/renderer.h
  /home/viktor/projects/vulkan-app/src/e172vp/renderpass.h
  /home/viktor/projects/vulkan-app/src/e172vp/swapchain.h
+ /home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.h
+ /home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/hardware.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/stringvector.h
+ /home/viktor/projects/vulkan-app/src/e172vp/vertex.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/renderpass.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/renderpass.h
@@ -47,6 +50,9 @@ CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o
 CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/time/time.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/time/time.h
+CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.o
+ /home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.cpp
+ /home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.h
 CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/tools/extensiontools.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/tools/extensiontools.h
@@ -72,12 +78,17 @@ CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/tools/stringvector.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/vulkaninstancefactory.cpp
  /home/viktor/projects/vulkan-app/src/e172vp/tools/vulkaninstancefactory.h
+CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.o
+ /home/viktor/projects/vulkan-app/src/e172vp/vertex.cpp
+ /home/viktor/projects/vulkan-app/src/e172vp/vertex.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o
  /home/viktor/projects/vulkan-app/src/e172vp/commandpool.h
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
- /home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h
+ /home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
  /home/viktor/projects/vulkan-app/src/e172vp/renderer.h
  /home/viktor/projects/vulkan-app/src/e172vp/renderpass.h
  /home/viktor/projects/vulkan-app/src/e172vp/swapchain.h
+ /home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.h
  /home/viktor/projects/vulkan-app/src/e172vp/tools/hardware.h
+ /home/viktor/projects/vulkan-app/src/e172vp/vertex.h
  /home/viktor/projects/vulkan-app/src/main.cpp

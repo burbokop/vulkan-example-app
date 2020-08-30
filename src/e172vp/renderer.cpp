@@ -3,7 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include "tools/stringvector.h"
-
+#include <math.h>
+#include <chrono>
+#include <glm/gtc/matrix_transform.hpp>
+#include "tools/buffer.h"
 
 e172vp::Renderer::Renderer() {
     glfwInit();
@@ -11,7 +14,7 @@ e172vp::Renderer::Renderer() {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     m_window = glfwCreateWindow(WIDTH, HEIGHT, "test-app", nullptr, nullptr);
 
-    GraphicsInstanceCreateInfo createInfo;
+    GraphicsObjectCreateInfo createInfo;
     createInfo.setRequiredExtensions(glfwExtensions());
     createInfo.setApplicationName("test-app");
     createInfo.setApplicationVersion(1);
@@ -25,29 +28,50 @@ e172vp::Renderer::Renderer() {
         *s = ss;
     });
 
-    m_graphicsInstance = GraphicsInstance(createInfo);
+    m_graphicsObject = GraphicsObject(createInfo);
 
-    if(m_graphicsInstance.debugEnabled())
-        std::cout << "Used validation layers: " << StringVector::toString(m_graphicsInstance.enabledValidationLayers()) << "\n";
+    if(m_graphicsObject.debugEnabled())
+        std::cout << "Used validation layers: " << StringVector::toString(m_graphicsObject.enabledValidationLayers()) << "\n";
 
-    if(!m_graphicsInstance.isValid())
+    if(!m_graphicsObject.isValid())
         std::cout << "GRAPHICS OBJECT IS NOT CREATED BECAUSE OF FOLOWING ERRORS:\n\n";
 
-    const auto errors = m_graphicsInstance.pullErrors();
+    const auto errors = m_graphicsObject.pullErrors();
     if(errors.size())
         std::cerr << StringVector::toString(errors) << "\n";
 
 
-    createSyncObjects(m_graphicsInstance.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
-    createGraphicsPipeline(m_graphicsInstance.logicalDevice(), m_graphicsInstance.swapChainSettings().extent, m_graphicsInstance.renderPass(), &pipelineLayout, &graphicsPipeline);
+
+    vertices = {
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+    };
+    indices = {
+        0, 1, 2,
+        2, 3, 0
+    };
 
 
 
-    //resetCommandBuffers(m_graphicsInstance.commandBuffers(), m_graphicsInstance.graphicsQueue(), m_graphicsInstance.presentQueue());
-    proceedCommandBuffers(m_graphicsInstance.renderPass(), graphicsPipeline, m_graphicsInstance.swapChainSettings().extent, m_graphicsInstance.renderPass().frameBufferVector(), m_graphicsInstance.commandPool().commandBufferVector(), CommandReciept());
+
+    createVertexBuffer(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), vertices, &vertexBuffer, &vertexBufferMemory);
+    createIndexBuffer(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), indices, &indexBuffer, &indexBufferMemory);
+
+    createDescriptorSetLayout(m_graphicsObject.logicalDevice(), &descriptorSetLayout);
+    createUniformBuffers(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.swapChain().imageCount(), uniformBuffers, uniformBuffersMemory);
+    createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), descriptorSetLayout, &pipelineLayout, &graphicsPipeline);
+
+    createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
 
 
+    for(size_t i = 0; i < m_graphicsObject.swapChain().imageCount(); ++i) {
+        updateUniformBuffer(i);
+    }
 
+
+    elapsedFromStart.reset();
 }
 
 bool e172vp::Renderer::isAlive() const {
@@ -55,26 +79,31 @@ bool e172vp::Renderer::isAlive() const {
     return !glfwWindowShouldClose(m_window);
 }
 
-void e172vp::Renderer::update() {
-    //resetCommandBuffers(m_graphicsInstance.commandBuffers(), m_graphicsInstance.graphicsQueue(), m_graphicsInstance.presentQueue());
-    //CommandReciept reciept;
-    //reciept.is_valid = true;
-    //reciept.x = std::cos(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
-    //reciept.y = std::sin(elapsedFromStart.elapsed() * 0.001) / 2 + 0.5;
-    //proceedCommandBuffers(m_graphicsInstance.renderPass(), graphicsPipeline, m_graphicsInstance.extent(), m_graphicsInstance.swapChainFramebuffers(), m_graphicsInstance.commandBuffers(), reciept);
+void e172vp::Renderer::applyPresentation() {
+    resetCommandBuffers(m_graphicsObject.commandPool().commandBufferVector(), m_graphicsObject.graphicsQueue(), m_graphicsObject.presentQueue());
+    CommandReciept reciept;
+    reciept.verticeCount = std::fmod(elapsedFromStart.elapsed() * 0.001, 5);
+    reciept.verticeCount = vertices.size();
+    reciept.indexCount = indices.size();
+    reciept.offsetX = (std::cos(elapsedFromStart.elapsed() * 0.001)) * 100.;
+    reciept.offsetY = (std::sin(elapsedFromStart.elapsed() * 0.001)) * 100.;
+    proceedCommandBuffers(m_graphicsObject.renderPass(), graphicsPipeline, m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass().frameBufferVector(), m_graphicsObject.commandPool().commandBufferVector(), vertexBuffer, indexBuffer, reciept);
 
     uint32_t imageIndex = 0;
     vk::Result returnCode;
 
 
-    returnCode = m_graphicsInstance.logicalDevice().acquireNextImageKHR(m_graphicsInstance.swapChain(), UINT64_MAX, imageAvailableSemaphore, {}, &imageIndex);
+    returnCode = m_graphicsObject.logicalDevice().acquireNextImageKHR(m_graphicsObject.swapChain(), UINT64_MAX, imageAvailableSemaphore, {}, &imageIndex);
     if(returnCode != vk::Result::eSuccess)
         throw std::runtime_error("acquiring next image failed. code: " + vk::to_string(returnCode));
 
-    auto currentImageCommandBuffer = m_graphicsInstance.commandPool().commandBuffer(imageIndex);
+    auto currentImageCommandBuffer = m_graphicsObject.commandPool().commandBuffer(imageIndex);
 
     vk::Semaphore waitSemaphores[] = { imageAvailableSemaphore };
     vk::PipelineStageFlags waitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
+
+
+    updateUniformBuffer(imageIndex);
 
     vk::SubmitInfo submitInfo{};
     submitInfo.waitSemaphoreCount = 1;
@@ -85,12 +114,12 @@ void e172vp::Renderer::update() {
     //submitInfo.signalSemaphoreCount = 1;
     //submitInfo.pSignalSemaphores = signalSemaphores;
 
-    returnCode = m_graphicsInstance.graphicsQueue().submit(1, &submitInfo, {});
+    returnCode = m_graphicsObject.graphicsQueue().submit(1, &submitInfo, {});
 
     if (returnCode != vk::Result::eSuccess)
         throw std::runtime_error("failed to submit draw command buffer. code: " + vk::to_string(returnCode));
 
-    vk::SwapchainKHR swapChains[] = { m_graphicsInstance.swapChain() };
+    vk::SwapchainKHR swapChains[] = { m_graphicsObject.swapChain() };
 
     vk::PresentInfoKHR presentInfo{};
     presentInfo.setWaitSemaphores(renderFinishedSemaphore);
@@ -99,11 +128,30 @@ void e172vp::Renderer::update() {
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr; // Optional
 
-    returnCode = m_graphicsInstance.presentQueue().presentKHR(&presentInfo);
+    returnCode = m_graphicsObject.presentQueue().presentKHR(&presentInfo);
     if(returnCode != vk::Result::eSuccess)
         throw std::runtime_error("present failed. code: " + vk::to_string(returnCode));
 
 }
+
+void e172vp::Renderer::updateUniformBuffer(uint32_t currentImage) {
+    static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+    UniformBufferObject ubo{};
+    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.proj = glm::perspective(glm::radians(45.0f), m_graphicsObject.swapChainSettings().extent.width / (float) m_graphicsObject.swapChainSettings().extent.height, 0.1f, 10.0f);
+    ubo.proj[1][1] *= -1;
+
+    void* data;
+    vkMapMemory(m_graphicsObject.logicalDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
+    memcpy(data, &ubo, sizeof(ubo));
+    vkUnmapMemory(m_graphicsObject.logicalDevice(), uniformBuffersMemory[currentImage]);
+}
+
 
 
 
@@ -123,32 +171,49 @@ std::vector<std::string> e172vp::Renderer::glfwExtensions() {
     return result;
 }
 
-void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const e172vp::Renderer::CommandReciept &reciept) {
+void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const e172vp::Renderer::CommandReciept &reciept) {
     for (size_t i = 0; i < commandBuffers.size(); i++) {
         vk::CommandBufferBeginInfo beginInfo{};
         if (commandBuffers.at(i).begin(&beginInfo) != vk::Result::eSuccess) {
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
-        vk::ClearValue clearColor;
-        vk::Offset2D offset;
-
-        clearColor = vk::ClearColorValue(std::array<float, 4> { 0.5f, 0.5f, 0.0f, 1.0f });
-        offset = vk::Offset2D(0, 0);
+        const vk::ClearValue clearColor = vk::ClearColorValue(std::array<float, 4> { 0.5f, 0.5f, 0.0f, 1.0f });
 
         vk::RenderPassBeginInfo renderPassInfo {};
         renderPassInfo.renderPass = renderPass;
         renderPassInfo.framebuffer = swapChainFramebuffers[i];
-        renderPassInfo.renderArea.offset = offset;
+        renderPassInfo.renderArea.offset = vk::Offset2D();
         renderPassInfo.renderArea.extent = extent;
         renderPassInfo.clearValueCount = 1;
         renderPassInfo.pClearValues = &clearColor;
 
-        commandBuffers.at(i).beginRenderPass(&renderPassInfo, vk::SubpassContents::eInline);
-        commandBuffers.at(i).bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
-        commandBuffers.at(i).draw(3, 1, 0, 0);
-        commandBuffers.at(i).endRenderPass();
-        commandBuffers.at(i).end();
+        vk::Viewport viewport;
+        viewport.setX(reciept.offsetX);
+        viewport.setWidth(extent.width);
+        viewport.setY(reciept.offsetY);
+        viewport.setHeight(extent.height);
+        viewport.setMinDepth(0.0f);
+        viewport.setMaxDepth(1.0f);
+
+
+
+        commandBuffers[i].beginRenderPass(&renderPassInfo, vk::SubpassContents::eInline);
+        commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
+        commandBuffers[i].setViewport(0, 1, &viewport);
+
+        vk::Buffer vertexBuffers[] = { vertexBuffer };
+        vk::DeviceSize offsets[] = { 0 };
+        commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
+
+
+        commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint16);
+
+
+        commandBuffers[i].drawIndexed(static_cast<uint32_t>(reciept.indexCount), 1, 0, 0, 0);
+
+        commandBuffers[i].endRenderPass();
+        commandBuffers[i].end();
     }
 }
 
@@ -161,9 +226,16 @@ void e172vp::Renderer::resetCommandBuffers(const std::vector<vk::CommandBuffer> 
     }
 }
 
-void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline) {
-    auto vertShaderCode = readFile("../shaders/vert.spv");
-    auto fragShaderCode = readFile("../shaders/frag.spv");
+void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const vk::DescriptorSetLayout& descriptorSetLayout, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline) {
+    bool useUniformBuffer = true;
+
+    std::vector<char> vertShaderCode;
+    if(useUniformBuffer) {
+        vertShaderCode = readFile("../shaders/vertex_buffer.spv");
+    } else {
+        vertShaderCode = readFile("../shaders/vert.spv");
+    }
+    std::vector<char> fragShaderCode = readFile("../shaders/frag.spv");
 
     vk::ShaderModule vertShaderModule = createShaderModule(logicDevice, vertShaderCode);
     vk::ShaderModule fragShaderModule = createShaderModule(logicDevice, fragShaderCode);
@@ -180,13 +252,19 @@ void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, con
 
     vk::PipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
+
+    //vertex input
     vk::PipelineVertexInputStateCreateInfo vertexInputInfo {};
-    vertexInputInfo.vertexBindingDescriptionCount = 0;
-    vertexInputInfo.vertexAttributeDescriptionCount = 0;
+    const auto bindingDescription = Vertex::bindingDescription();
+    const auto attributeDescriptions = Vertex::attributeDescriptions();
+    vertexInputInfo.vertexBindingDescriptionCount = 1;
+    vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+    vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+    vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
     vk::PipelineInputAssemblyStateCreateInfo inputAssembly {};
     inputAssembly.topology = vk::PrimitiveTopology::eTriangleList;
-    inputAssembly.primitiveRestartEnable = VK_FALSE;
+    inputAssembly.primitiveRestartEnable = false;
 
     vk::Viewport viewport {};
     viewport.x = 0.0f;
@@ -239,8 +317,9 @@ void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, con
     colorBlending.blendConstants[3] = 0.0f;
 
     vk::PipelineLayoutCreateInfo pipelineLayoutInfo{};
-    pipelineLayoutInfo.setLayoutCount = 0;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 
     if (logicDevice.createPipelineLayout(&pipelineLayoutInfo, nullptr, pipelineLayout) != vk::Result::eSuccess) {
         throw std::runtime_error("failed to create pipeline layout!");
@@ -295,8 +374,84 @@ void e172vp::Renderer::createSyncObjects(const vk::Device &logicDevice, vk::Sema
         throw std::runtime_error("failed to create synchronization objects for a frame!");
 }
 
+
+void e172vp::Renderer::createVertexBuffer(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &graphicsQueue, const std::vector<Vertex> &vertices, vk::Buffer *vertexBuffer, vk::DeviceMemory *vertexBufferMemory) {
+    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+
+    vk::Buffer stagingBuffer;
+    vk::DeviceMemory stagingBufferMemory;
+    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, vertices.data(), (size_t) bufferSize);
+    vkUnmapMemory(logicalDevice, stagingBufferMemory);
+
+    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, *vertexBuffer, *vertexBufferMemory);
+
+    Buffer::copyBuffer(logicalDevice, commandPool, graphicsQueue, stagingBuffer, *vertexBuffer, bufferSize);
+
+    vkDestroyBuffer(logicalDevice, stagingBuffer, nullptr);
+    vkFreeMemory(logicalDevice, stagingBufferMemory, nullptr);
+}
+
+void e172vp::Renderer::createIndexBuffer(const vk::Device &logicalDevice,
+                                         const vk::PhysicalDevice &physicalDevice,
+                                         const vk::CommandPool &commandPool,
+                                         const vk::Queue &graphicsQueue,
+                                         const std::vector<uint16_t> &indices,
+                                         vk::Buffer *indexBuffer,
+                                         vk::DeviceMemory *indexBufferMemory
+                                         ) {
+    VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+
+    vk::Buffer stagingBuffer;
+    vk::DeviceMemory stagingBufferMemory;
+    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, indices.data(), (size_t) bufferSize);
+    vkUnmapMemory(logicalDevice, stagingBufferMemory);
+
+    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, *indexBuffer, *indexBufferMemory);
+
+    Buffer::copyBuffer(logicalDevice, commandPool, graphicsQueue, stagingBuffer, *indexBuffer, bufferSize);
+
+    vkDestroyBuffer(logicalDevice, stagingBuffer, nullptr);
+    vkFreeMemory(logicalDevice, stagingBufferMemory, nullptr);
+}
+
+void e172vp::Renderer::createDescriptorSetLayout(const vk::Device &logicalDevice, vk::DescriptorSetLayout *descriptorSetLayout) {
+    vk::DescriptorSetLayoutBinding uboLayoutBinding;
+    uboLayoutBinding.binding = 0;
+    uboLayoutBinding.descriptorCount = 1;
+    uboLayoutBinding.descriptorType = vk::DescriptorType::eUniformBuffer;
+    uboLayoutBinding.pImmutableSamplers = nullptr;
+    uboLayoutBinding.stageFlags = vk::ShaderStageFlagBits::eVertex;
+
+    vk::DescriptorSetLayoutCreateInfo layoutInfo;
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &uboLayoutBinding;
+
+    if (logicalDevice.createDescriptorSetLayout(&layoutInfo, nullptr, descriptorSetLayout) != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to create descriptor set layout!");
+    }
+}
+
+void e172vp::Renderer::createUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> &uniformBuffers, std::vector<vk::DeviceMemory> &uniformBuffersMemory) {
+    const vk::DeviceSize bufferSize = sizeof(UniformBufferObject);
+
+    uniformBuffers.resize(count);
+    uniformBuffersMemory.resize(count);
+
+    for (size_t i = 0; i < count; i++) {
+        Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eUniformBuffer, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, uniformBuffers[i], uniformBuffersMemory[i]);
+    }
+}
+
 vk::ShaderModule e172vp::Renderer::createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code) {
-    vk::ShaderModuleCreateInfo createInfo{};
+    vk::ShaderModuleCreateInfo createInfo;
     createInfo.setCodeSize(code.size());
     createInfo.setPCode(reinterpret_cast<const uint32_t*>(code.data()));
 
@@ -308,8 +463,4 @@ vk::ShaderModule e172vp::Renderer::createShaderModule(const vk::Device &logicDev
     return shaderModule;
 }
 
-
-
-e172vp::GraphicsInstance e172vp::Renderer::graphicsInstance() const {
-    return m_graphicsInstance;
-}
+e172vp::GraphicsObject e172vp::Renderer::graphicsObject() const { return m_graphicsObject; }

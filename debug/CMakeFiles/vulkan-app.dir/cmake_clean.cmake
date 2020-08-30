@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o"
-  "CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.o"
+  "CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o"
+  "CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/tools/hardware.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/tools/validation.cpp.o"
@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/vulkan-app.dir/src/e172vp/swapchain.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o"
+  "CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.o"
+  "CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o"
   "CMakeFiles/vulkan-app.dir/src/main.cpp.o"

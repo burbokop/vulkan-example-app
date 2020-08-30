@@ -11,10 +11,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 add_executable(vulkan-app
-    src/e172vp/graphicsinstance.cpp
-    src/e172vp/graphicsinstance.h
-    src/e172vp/graphicsinstancecreateinfo.cpp
-    src/e172vp/graphicsinstancecreateinfo.h
+    src/e172vp/graphicsobject.cpp
+    src/e172vp/graphicsobject.h
+    src/e172vp/graphicsobjectcreateinfo.cpp
+    src/e172vp/graphicsobjectcreateinfo.h
     src/e172vp/tools/hardware.cpp
     src/e172vp/tools/hardware.h
     src/e172vp/tools/extensiontools.cpp
@@ -35,6 +35,10 @@ add_executable(vulkan-app
     src/e172vp/renderpass.h
     src/e172vp/commandpool.cpp
     src/e172vp/commandpool.h
+    src/e172vp/vertex.cpp
+    src/e172vp/vertex.h
+    src/e172vp/tools/buffer.cpp
+    src/e172vp/tools/buffer.h
 
     src/e172vp/time/time.h
     src/e172vp/time/time.cpp

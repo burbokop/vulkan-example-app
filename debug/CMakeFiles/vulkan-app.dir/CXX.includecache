@@ -16,9 +16,9 @@ vulkan/vulkan.hpp
 tools/hardware.h
 /home/viktor/projects/vulkan-app/src/e172vp/tools/hardware.h
 
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.cpp
-graphicsinstance.h
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.cpp
+graphicsobject.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h
 tools/hardware.h
 /home/viktor/projects/vulkan-app/src/e172vp/tools/hardware.h
 tools/validation.h
@@ -36,9 +36,9 @@ set
 iostream
 -
 
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
-graphicsinstancecreateinfo.h
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h
+graphicsobjectcreateinfo.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
 tools/hardware.h
 /home/viktor/projects/vulkan-app/src/e172vp/tools/hardware.h
 vulkan/vulkan.hpp
@@ -54,11 +54,11 @@ renderpass.h
 commandpool.h
 /home/viktor/projects/vulkan-app/src/e172vp/commandpool.h
 
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.cpp
-graphicsinstancecreateinfo.h
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.cpp
+graphicsobjectcreateinfo.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
 
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h
 string
 -
 vector
@@ -77,12 +77,24 @@ fstream
 -
 tools/stringvector.h
 /home/viktor/projects/vulkan-app/src/e172vp/tools/stringvector.h
+math.h
+-
+chrono
+-
+glm/gtc/matrix_transform.hpp
+-
+tools/buffer.h
+/home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.h
 
 /home/viktor/projects/vulkan-app/src/e172vp/renderer.h
-graphicsinstance.h
-/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h
+graphicsobject.h
+/home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h
 GLFW/glfw3.h
 -
+time/elapsedtimer.h
+/home/viktor/projects/vulkan-app/src/e172vp/time/elapsedtimer.h
+vertex.h
+/home/viktor/projects/vulkan-app/src/e172vp/vertex.h
 
 /home/viktor/projects/vulkan-app/src/e172vp/renderpass.cpp
 renderpass.h
@@ -122,6 +134,14 @@ sys/timeb.h
 
 /home/viktor/projects/vulkan-app/src/e172vp/time/time.h
 inttypes.h
+-
+
+/home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.cpp
+buffer.h
+/home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.h
+
+/home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.h
+vulkan/vulkan.hpp
 -
 
 /home/viktor/projects/vulkan-app/src/e172vp/tools/extensiontools.cpp
@@ -204,6 +224,16 @@ iostream
 vulkan/vulkan.hpp
 -
 map
+-
+
+/home/viktor/projects/vulkan-app/src/e172vp/vertex.cpp
+vertex.h
+/home/viktor/projects/vulkan-app/src/e172vp/vertex.h
+
+/home/viktor/projects/vulkan-app/src/e172vp/vertex.h
+vulkan/vulkan.hpp
+-
+glm/glm.hpp
 -
 
 /home/viktor/projects/vulkan-app/src/main.cpp

@@ -92,16 +92,16 @@
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/commandpool.h">
 			<Option target="vulkan-app"/>
 		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.cpp">
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.cpp">
 			<Option target="vulkan-app"/>
 		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstance.h">
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsobject.h">
 			<Option target="vulkan-app"/>
 		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.cpp">
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.cpp">
 			<Option target="vulkan-app"/>
 		</Unit>
-		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsinstancecreateinfo.h">
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/graphicsobjectcreateinfo.h">
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/renderer.cpp">
@@ -132,6 +132,12 @@
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/time/time.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/tools/buffer.h">
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/tools/extensiontools.cpp">
@@ -168,6 +174,12 @@
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/tools/vulkaninstancefactory.h">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/vertex.cpp">
+			<Option target="vulkan-app"/>
+		</Unit>
+		<Unit filename="/home/viktor/projects/vulkan-app/src/e172vp/vertex.h">
 			<Option target="vulkan-app"/>
 		</Unit>
 		<Unit filename="/home/viktor/projects/vulkan-app/src/main.cpp">

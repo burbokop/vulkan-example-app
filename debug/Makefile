@@ -150,59 +150,59 @@ src/e172vp/commandpool.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.s
 .PHONY : src/e172vp/commandpool.cpp.s
 
-src/e172vp/graphicsinstance.o: src/e172vp/graphicsinstance.cpp.o
+src/e172vp/graphicsobject.o: src/e172vp/graphicsobject.cpp.o
 
-.PHONY : src/e172vp/graphicsinstance.o
-
-# target to build an object file
-src/e172vp/graphicsinstance.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o
-.PHONY : src/e172vp/graphicsinstance.cpp.o
-
-src/e172vp/graphicsinstance.i: src/e172vp/graphicsinstance.cpp.i
-
-.PHONY : src/e172vp/graphicsinstance.i
-
-# target to preprocess a source file
-src/e172vp/graphicsinstance.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.i
-.PHONY : src/e172vp/graphicsinstance.cpp.i
-
-src/e172vp/graphicsinstance.s: src/e172vp/graphicsinstance.cpp.s
-
-.PHONY : src/e172vp/graphicsinstance.s
-
-# target to generate assembly for a file
-src/e172vp/graphicsinstance.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.s
-.PHONY : src/e172vp/graphicsinstance.cpp.s
-
-src/e172vp/graphicsinstancecreateinfo.o: src/e172vp/graphicsinstancecreateinfo.cpp.o
-
-.PHONY : src/e172vp/graphicsinstancecreateinfo.o
+.PHONY : src/e172vp/graphicsobject.o
 
 # target to build an object file
-src/e172vp/graphicsinstancecreateinfo.cpp.o:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.o
-.PHONY : src/e172vp/graphicsinstancecreateinfo.cpp.o
+src/e172vp/graphicsobject.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o
+.PHONY : src/e172vp/graphicsobject.cpp.o
 
-src/e172vp/graphicsinstancecreateinfo.i: src/e172vp/graphicsinstancecreateinfo.cpp.i
+src/e172vp/graphicsobject.i: src/e172vp/graphicsobject.cpp.i
 
-.PHONY : src/e172vp/graphicsinstancecreateinfo.i
+.PHONY : src/e172vp/graphicsobject.i
 
 # target to preprocess a source file
-src/e172vp/graphicsinstancecreateinfo.cpp.i:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.i
-.PHONY : src/e172vp/graphicsinstancecreateinfo.cpp.i
+src/e172vp/graphicsobject.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.i
+.PHONY : src/e172vp/graphicsobject.cpp.i
 
-src/e172vp/graphicsinstancecreateinfo.s: src/e172vp/graphicsinstancecreateinfo.cpp.s
+src/e172vp/graphicsobject.s: src/e172vp/graphicsobject.cpp.s
 
-.PHONY : src/e172vp/graphicsinstancecreateinfo.s
+.PHONY : src/e172vp/graphicsobject.s
 
 # target to generate assembly for a file
-src/e172vp/graphicsinstancecreateinfo.cpp.s:
-	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.s
-.PHONY : src/e172vp/graphicsinstancecreateinfo.cpp.s
+src/e172vp/graphicsobject.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.s
+.PHONY : src/e172vp/graphicsobject.cpp.s
+
+src/e172vp/graphicsobjectcreateinfo.o: src/e172vp/graphicsobjectcreateinfo.cpp.o
+
+.PHONY : src/e172vp/graphicsobjectcreateinfo.o
+
+# target to build an object file
+src/e172vp/graphicsobjectcreateinfo.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.o
+.PHONY : src/e172vp/graphicsobjectcreateinfo.cpp.o
+
+src/e172vp/graphicsobjectcreateinfo.i: src/e172vp/graphicsobjectcreateinfo.cpp.i
+
+.PHONY : src/e172vp/graphicsobjectcreateinfo.i
+
+# target to preprocess a source file
+src/e172vp/graphicsobjectcreateinfo.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.i
+.PHONY : src/e172vp/graphicsobjectcreateinfo.cpp.i
+
+src/e172vp/graphicsobjectcreateinfo.s: src/e172vp/graphicsobjectcreateinfo.cpp.s
+
+.PHONY : src/e172vp/graphicsobjectcreateinfo.s
+
+# target to generate assembly for a file
+src/e172vp/graphicsobjectcreateinfo.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.s
+.PHONY : src/e172vp/graphicsobjectcreateinfo.cpp.s
 
 src/e172vp/renderer.o: src/e172vp/renderer.cpp.o
 
@@ -338,6 +338,33 @@ src/e172vp/time/time.s: src/e172vp/time/time.cpp.s
 src/e172vp/time/time.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.s
 .PHONY : src/e172vp/time/time.cpp.s
+
+src/e172vp/tools/buffer.o: src/e172vp/tools/buffer.cpp.o
+
+.PHONY : src/e172vp/tools/buffer.o
+
+# target to build an object file
+src/e172vp/tools/buffer.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.o
+.PHONY : src/e172vp/tools/buffer.cpp.o
+
+src/e172vp/tools/buffer.i: src/e172vp/tools/buffer.cpp.i
+
+.PHONY : src/e172vp/tools/buffer.i
+
+# target to preprocess a source file
+src/e172vp/tools/buffer.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.i
+.PHONY : src/e172vp/tools/buffer.cpp.i
+
+src/e172vp/tools/buffer.s: src/e172vp/tools/buffer.cpp.s
+
+.PHONY : src/e172vp/tools/buffer.s
+
+# target to generate assembly for a file
+src/e172vp/tools/buffer.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.s
+.PHONY : src/e172vp/tools/buffer.cpp.s
 
 src/e172vp/tools/extensiontools.o: src/e172vp/tools/extensiontools.cpp.o
 
@@ -501,6 +528,33 @@ src/e172vp/tools/vulkaninstancefactory.cpp.s:
 	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.s
 .PHONY : src/e172vp/tools/vulkaninstancefactory.cpp.s
 
+src/e172vp/vertex.o: src/e172vp/vertex.cpp.o
+
+.PHONY : src/e172vp/vertex.o
+
+# target to build an object file
+src/e172vp/vertex.cpp.o:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.o
+.PHONY : src/e172vp/vertex.cpp.o
+
+src/e172vp/vertex.i: src/e172vp/vertex.cpp.i
+
+.PHONY : src/e172vp/vertex.i
+
+# target to preprocess a source file
+src/e172vp/vertex.cpp.i:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.i
+.PHONY : src/e172vp/vertex.cpp.i
+
+src/e172vp/vertex.s: src/e172vp/vertex.cpp.s
+
+.PHONY : src/e172vp/vertex.s
+
+# target to generate assembly for a file
+src/e172vp/vertex.cpp.s:
+	$(MAKE) -f CMakeFiles/vulkan-app.dir/build.make CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.s
+.PHONY : src/e172vp/vertex.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -540,12 +594,12 @@ help:
 	@echo "... src/e172vp/commandpool.o"
 	@echo "... src/e172vp/commandpool.i"
 	@echo "... src/e172vp/commandpool.s"
-	@echo "... src/e172vp/graphicsinstance.o"
-	@echo "... src/e172vp/graphicsinstance.i"
-	@echo "... src/e172vp/graphicsinstance.s"
-	@echo "... src/e172vp/graphicsinstancecreateinfo.o"
-	@echo "... src/e172vp/graphicsinstancecreateinfo.i"
-	@echo "... src/e172vp/graphicsinstancecreateinfo.s"
+	@echo "... src/e172vp/graphicsobject.o"
+	@echo "... src/e172vp/graphicsobject.i"
+	@echo "... src/e172vp/graphicsobject.s"
+	@echo "... src/e172vp/graphicsobjectcreateinfo.o"
+	@echo "... src/e172vp/graphicsobjectcreateinfo.i"
+	@echo "... src/e172vp/graphicsobjectcreateinfo.s"
 	@echo "... src/e172vp/renderer.o"
 	@echo "... src/e172vp/renderer.i"
 	@echo "... src/e172vp/renderer.s"
@@ -561,6 +615,9 @@ help:
 	@echo "... src/e172vp/time/time.o"
 	@echo "... src/e172vp/time/time.i"
 	@echo "... src/e172vp/time/time.s"
+	@echo "... src/e172vp/tools/buffer.o"
+	@echo "... src/e172vp/tools/buffer.i"
+	@echo "... src/e172vp/tools/buffer.s"
 	@echo "... src/e172vp/tools/extensiontools.o"
 	@echo "... src/e172vp/tools/extensiontools.i"
 	@echo "... src/e172vp/tools/extensiontools.s"
@@ -579,6 +636,9 @@ help:
 	@echo "... src/e172vp/tools/vulkaninstancefactory.o"
 	@echo "... src/e172vp/tools/vulkaninstancefactory.i"
 	@echo "... src/e172vp/tools/vulkaninstancefactory.s"
+	@echo "... src/e172vp/vertex.o"
+	@echo "... src/e172vp/vertex.i"
+	@echo "... src/e172vp/vertex.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

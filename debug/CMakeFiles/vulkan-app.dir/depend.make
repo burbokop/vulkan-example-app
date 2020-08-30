@@ -5,31 +5,34 @@ CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o: ../src/e172vp/commandpoo
 CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o: ../src/e172vp/commandpool.h
 CMakeFiles/vulkan-app.dir/src/e172vp/commandpool.cpp.o: ../src/e172vp/tools/hardware.h
 
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/commandpool.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/graphicsinstance.cpp
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/graphicsinstance.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/graphicsinstancecreateinfo.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/renderpass.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/swapchain.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/tools/extensiontools.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/tools/hardware.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/tools/logicdevicefactory.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/tools/stringvector.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/tools/validation.h
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstance.cpp.o: ../src/e172vp/tools/vulkaninstancefactory.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/commandpool.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/graphicsobject.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/graphicsobject.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/graphicsobjectcreateinfo.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/renderpass.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/swapchain.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/tools/extensiontools.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/tools/hardware.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/tools/logicdevicefactory.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/tools/stringvector.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/tools/validation.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobject.cpp.o: ../src/e172vp/tools/vulkaninstancefactory.h
 
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.o: ../src/e172vp/graphicsinstancecreateinfo.cpp
-CMakeFiles/vulkan-app.dir/src/e172vp/graphicsinstancecreateinfo.cpp.o: ../src/e172vp/graphicsinstancecreateinfo.h
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.o: ../src/e172vp/graphicsobjectcreateinfo.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/graphicsobjectcreateinfo.cpp.o: ../src/e172vp/graphicsobjectcreateinfo.h
 
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/commandpool.h
-CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/graphicsinstance.h
-CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/graphicsinstancecreateinfo.h
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/graphicsobject.h
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/graphicsobjectcreateinfo.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/renderer.cpp
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/renderer.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/renderpass.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/swapchain.h
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/time/elapsedtimer.h
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/tools/buffer.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/tools/hardware.h
 CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/tools/stringvector.h
+CMakeFiles/vulkan-app.dir/src/e172vp/renderer.cpp.o: ../src/e172vp/vertex.h
 
 CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o: ../src/e172vp/renderpass.cpp
 CMakeFiles/vulkan-app.dir/src/e172vp/renderpass.cpp.o: ../src/e172vp/renderpass.h
@@ -46,6 +49,9 @@ CMakeFiles/vulkan-app.dir/src/e172vp/time/elapsedtimer.cpp.o: ../src/e172vp/time
 
 CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o: ../src/e172vp/time/time.cpp
 CMakeFiles/vulkan-app.dir/src/e172vp/time/time.cpp.o: ../src/e172vp/time/time.h
+
+CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.o: ../src/e172vp/tools/buffer.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/tools/buffer.cpp.o: ../src/e172vp/tools/buffer.h
 
 CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.o: ../src/e172vp/tools/extensiontools.cpp
 CMakeFiles/vulkan-app.dir/src/e172vp/tools/extensiontools.cpp.o: ../src/e172vp/tools/extensiontools.h
@@ -72,12 +78,17 @@ CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o: ../src/e
 CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o: ../src/e172vp/tools/vulkaninstancefactory.cpp
 CMakeFiles/vulkan-app.dir/src/e172vp/tools/vulkaninstancefactory.cpp.o: ../src/e172vp/tools/vulkaninstancefactory.h
 
+CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.o: ../src/e172vp/vertex.cpp
+CMakeFiles/vulkan-app.dir/src/e172vp/vertex.cpp.o: ../src/e172vp/vertex.h
+
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/commandpool.h
-CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/graphicsinstance.h
-CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/graphicsinstancecreateinfo.h
+CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/graphicsobject.h
+CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/graphicsobjectcreateinfo.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/renderer.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/renderpass.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/swapchain.h
+CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/time/elapsedtimer.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/tools/hardware.h
+CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/e172vp/vertex.h
 CMakeFiles/vulkan-app.dir/src/main.cpp.o: ../src/main.cpp
 

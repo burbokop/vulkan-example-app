@@ -1,6 +1,11 @@
 #include "renderpass.h"
 
 vk::RenderPass e172vp::RenderPass::renderPathHandle() const { return m_renderPathHandle; }
+
+e172vp::RenderPass::operator VkRenderPass() const {
+    return m_renderPathHandle;
+}
+
 bool e172vp::RenderPass::isValid() const { return m_isValid; }
 
 std::vector<vk::Framebuffer> e172vp::RenderPass::frameBufferVector() const {
