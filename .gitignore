@@ -1,3 +1,10 @@
+/release
+/profile
+/debug
+/build
+/bin
+
+
 # C++ objects and libs
 *.slo
 *.lo
