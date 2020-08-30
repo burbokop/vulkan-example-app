@@ -14,6 +14,11 @@ other os: https://www.glfw.org
 
 https://vulkan.lunarg.com
 
+### Vulkan drivers
+
+ubuntu: `sudo apt-get install mesa-vulkan-drivers`
+
+
 
 # vkQueueSubmit crash
 
