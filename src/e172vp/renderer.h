@@ -35,6 +35,10 @@ class Renderer {
 
     vk::DescriptorSetLayout descriptorSetLayout;
     std::vector<vk::Buffer> uniformBuffers;
+    vk::DescriptorPool uniformDescriptorPool;
+    std::vector<vk::DescriptorSet> uniformDescriptorSets;
+
+
     std::vector<vk::DeviceMemory> uniformBuffersMemory;
 
     struct UniformBufferObject {
@@ -54,7 +58,7 @@ public:
         std::vector<vk::Rect2D> rects;
     };
 
-    static void proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const CommandReciept &reciept);
+    static void proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::PipelineLayout &pipelineLayout, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const std::vector<vk::DescriptorSet> &uniformDescriptorSets, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const CommandReciept &reciept);
     static void resetCommandBuffers(const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Queue &graphicsQueue, const vk::Queue &presentQueue);
     static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const vk::DescriptorSetLayout &descriptorSetLayout, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
     static void createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
@@ -82,6 +86,9 @@ public:
     static void createDescriptorSetLayout(const vk::Device &logicalDevice, vk::DescriptorSetLayout *descriptorSetLayout);
 
     static void createUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> &uniformBuffers, std::vector<vk::DeviceMemory> &uniformBuffersMemory);
+
+    static void createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool);
+    static void createDescriptorSets(const vk::Device &logicalDevice, const std::vector<vk::Buffer> &uniformBuffers, const vk::DescriptorSetLayout &descriptorSetLayout, const vk::DescriptorPool &descriptorPool, std::vector<vk::DescriptorSet> *descriptorSets);
 
     static vk::ShaderModule createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code);
     static std::vector<char> readFile(const std::string &filename);

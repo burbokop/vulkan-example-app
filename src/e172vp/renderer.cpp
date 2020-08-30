@@ -60,7 +60,13 @@ e172vp::Renderer::Renderer() {
     createIndexBuffer(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), indices, &indexBuffer, &indexBufferMemory);
 
     createDescriptorSetLayout(m_graphicsObject.logicalDevice(), &descriptorSetLayout);
+
+
     createUniformBuffers(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.swapChain().imageCount(), uniformBuffers, uniformBuffersMemory);
+
+    createDescriptorPool(m_graphicsObject.logicalDevice(), uniformBuffers.size(), &uniformDescriptorPool);
+    createDescriptorSets(m_graphicsObject.logicalDevice(), uniformBuffers, descriptorSetLayout, uniformDescriptorPool, &uniformDescriptorSets);
+
     createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), descriptorSetLayout, &pipelineLayout, &graphicsPipeline);
 
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
@@ -87,7 +93,7 @@ void e172vp::Renderer::applyPresentation() {
     reciept.indexCount = indices.size();
     reciept.offsetX = (std::cos(elapsedFromStart.elapsed() * 0.001)) * 100.;
     reciept.offsetY = (std::sin(elapsedFromStart.elapsed() * 0.001)) * 100.;
-    proceedCommandBuffers(m_graphicsObject.renderPass(), graphicsPipeline, m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass().frameBufferVector(), m_graphicsObject.commandPool().commandBufferVector(), vertexBuffer, indexBuffer, reciept);
+    proceedCommandBuffers(m_graphicsObject.renderPass(), graphicsPipeline, pipelineLayout, m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass().frameBufferVector(), m_graphicsObject.commandPool().commandBufferVector(), uniformDescriptorSets, vertexBuffer, indexBuffer, reciept);
 
     uint32_t imageIndex = 0;
     vk::Result returnCode;
@@ -141,10 +147,22 @@ void e172vp::Renderer::updateUniformBuffer(uint32_t currentImage) {
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     UniformBufferObject ubo{};
+
+    glm::mat4 singleMatrix {
+        { 1, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, 1 }
+    };
+
     ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    ubo.proj = glm::perspective(glm::radians(45.0f), m_graphicsObject.swapChainSettings().extent.width / (float) m_graphicsObject.swapChainSettings().extent.height, 0.1f, 10.0f);
-    ubo.proj[1][1] *= -1;
+    //ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    //ubo.proj = glm::perspective(glm::radians(45.0f), m_graphicsObject.swapChainSettings().extent.width / (float) m_graphicsObject.swapChainSettings().extent.height, 0.1f, 10.0f);
+    //ubo.proj[1][1] *= -1;
+
+    //ubo.model = singleMatrix;
+    ubo.view = singleMatrix;
+    ubo.proj = singleMatrix;
 
     void* data;
     vkMapMemory(m_graphicsObject.logicalDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
@@ -171,7 +189,7 @@ std::vector<std::string> e172vp::Renderer::glfwExtensions() {
     return result;
 }
 
-void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const e172vp::Renderer::CommandReciept &reciept) {
+void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::PipelineLayout &pipelineLayout, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const std::vector<vk::DescriptorSet> &uniformDescriptorSets, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const e172vp::Renderer::CommandReciept &reciept) {
     for (size_t i = 0; i < commandBuffers.size(); i++) {
         vk::CommandBufferBeginInfo beginInfo{};
         if (commandBuffers.at(i).begin(&beginInfo) != vk::Result::eSuccess) {
@@ -206,10 +224,8 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
         vk::DeviceSize offsets[] = { 0 };
         commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
 
-
         commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint16);
-
-
+        commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, 1, &uniformDescriptorSets[i], 0, nullptr);
         commandBuffers[i].drawIndexed(static_cast<uint32_t>(reciept.indexCount), 1, 0, 0, 0);
 
         commandBuffers[i].endRenderPass();
@@ -447,6 +463,51 @@ void e172vp::Renderer::createUniformBuffers(const vk::Device &logicalDevice, con
 
     for (size_t i = 0; i < count; i++) {
         Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eUniformBuffer, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, uniformBuffers[i], uniformBuffersMemory[i]);
+    }
+}
+
+void e172vp::Renderer::createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool) {
+    vk::DescriptorPoolSize poolSize;
+    poolSize.type = vk::DescriptorType::eUniformBuffer;
+    poolSize.descriptorCount = static_cast<uint32_t>(size);
+
+    vk::DescriptorPoolCreateInfo poolInfo;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+    poolInfo.maxSets = static_cast<uint32_t>(size);
+
+    if (logicalDevice.createDescriptorPool(&poolInfo, nullptr, uniformDescriptorPool) != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to create descriptor pool!");
+    }
+}
+
+void e172vp::Renderer::createDescriptorSets(const vk::Device &logicalDevice, const std::vector<vk::Buffer> &uniformBuffers, const vk::DescriptorSetLayout &descriptorSetLayout, const vk::DescriptorPool &descriptorPool, std::vector<vk::DescriptorSet> *descriptorSets) {
+    std::vector<vk::DescriptorSetLayout> layouts(uniformBuffers.size(), descriptorSetLayout);
+    vk::DescriptorSetAllocateInfo allocInfo;
+    allocInfo.descriptorPool = descriptorPool;
+    allocInfo.descriptorSetCount = static_cast<uint32_t>(uniformBuffers.size());
+    allocInfo.pSetLayouts = layouts.data();
+
+    descriptorSets->resize(uniformBuffers.size());
+    if (logicalDevice.allocateDescriptorSets(&allocInfo, descriptorSets->data()) != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to allocate descriptor sets!");
+    }
+
+    for (size_t i = 0; i < uniformBuffers.size(); i++) {
+        vk::DescriptorBufferInfo bufferInfo;
+        bufferInfo.buffer = uniformBuffers[i];
+        bufferInfo.offset = 0;
+        bufferInfo.range = sizeof(UniformBufferObject);
+
+        vk::WriteDescriptorSet descriptorWrite{};
+        descriptorWrite.dstSet = descriptorSets->at(i);
+        descriptorWrite.dstBinding = 0;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = vk::DescriptorType::eUniformBuffer;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pBufferInfo = &bufferInfo;
+
+        logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
     }
 }
 
