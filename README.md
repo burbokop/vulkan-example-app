@@ -6,7 +6,9 @@
 ### GLFW
 
 
-ubuntu: `sudo apt-get install libglfw3 libglfw3-dev`
+ubuntu: `sudo apt-get install libglfw3 libglfw3-dev`<br>
+
+other os: https://www.glfw.org
 
 ### Vulkan SDK
 
