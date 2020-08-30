@@ -56,25 +56,15 @@ e172vp::Renderer::Renderer() {
 
 
 
-    createVertexBuffer(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), vertices, &vertexBuffer, &vertexBufferMemory);
-    createIndexBuffer(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), indices, &indexBuffer, &indexBufferMemory);
-
+    Buffer::createVertexBuffer(&m_graphicsObject, vertices, &vertexBuffer, &vertexBufferMemory);
+    Buffer::createIndexBuffer(&m_graphicsObject, indices, &indexBuffer, &indexBufferMemory);
     createDescriptorSetLayout(m_graphicsObject.logicalDevice(), &descriptorSetLayout);
-
-
-    createUniformBuffers(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.swapChain().imageCount(), uniformBuffers, uniformBuffersMemory);
-
-    createDescriptorPool(m_graphicsObject.logicalDevice(), uniformBuffers.size(), &uniformDescriptorPool);
-    createDescriptorSets(m_graphicsObject.logicalDevice(), uniformBuffers, descriptorSetLayout, uniformDescriptorPool, &uniformDescriptorSets);
+    createGlobalUniformBuffers(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.swapChain().imageCount(), &uniformBuffers, &uniformBuffersMemory);
+    GraphicsObject::createDescriptorPool(m_graphicsObject.logicalDevice(), uniformBuffers.size(), &uniformDescriptorPool, nullptr);
+    Buffer::createUniformDescriptorSets<GlobalUniformBufferObject>(m_graphicsObject.logicalDevice(), uniformDescriptorPool, uniformBuffers, descriptorSetLayout, &uniformDescriptorSets);
 
     createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), descriptorSetLayout, &pipelineLayout, &graphicsPipeline);
-
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
-
-
-    for(size_t i = 0; i < m_graphicsObject.swapChain().imageCount(); ++i) {
-        updateUniformBuffer(i);
-    }
 
 
     elapsedFromStart.reset();
@@ -146,7 +136,7 @@ void e172vp::Renderer::updateUniformBuffer(uint32_t currentImage) {
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-    UniformBufferObject ubo{};
+    GlobalUniformBufferObject ubo{};
 
     glm::mat4 singleMatrix {
         { 1, 0, 0, 0 },
@@ -391,52 +381,7 @@ void e172vp::Renderer::createSyncObjects(const vk::Device &logicDevice, vk::Sema
 }
 
 
-void e172vp::Renderer::createVertexBuffer(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &graphicsQueue, const std::vector<Vertex> &vertices, vk::Buffer *vertexBuffer, vk::DeviceMemory *vertexBufferMemory) {
-    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-    vk::Buffer stagingBuffer;
-    vk::DeviceMemory stagingBufferMemory;
-    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
-
-    void* data;
-    vkMapMemory(logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, vertices.data(), (size_t) bufferSize);
-    vkUnmapMemory(logicalDevice, stagingBufferMemory);
-
-    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, *vertexBuffer, *vertexBufferMemory);
-
-    Buffer::copyBuffer(logicalDevice, commandPool, graphicsQueue, stagingBuffer, *vertexBuffer, bufferSize);
-
-    vkDestroyBuffer(logicalDevice, stagingBuffer, nullptr);
-    vkFreeMemory(logicalDevice, stagingBufferMemory, nullptr);
-}
-
-void e172vp::Renderer::createIndexBuffer(const vk::Device &logicalDevice,
-                                         const vk::PhysicalDevice &physicalDevice,
-                                         const vk::CommandPool &commandPool,
-                                         const vk::Queue &graphicsQueue,
-                                         const std::vector<uint16_t> &indices,
-                                         vk::Buffer *indexBuffer,
-                                         vk::DeviceMemory *indexBufferMemory
-                                         ) {
-    VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-
-    vk::Buffer stagingBuffer;
-    vk::DeviceMemory stagingBufferMemory;
-    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
-
-    void* data;
-    vkMapMemory(logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, indices.data(), (size_t) bufferSize);
-    vkUnmapMemory(logicalDevice, stagingBufferMemory);
-
-    Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, *indexBuffer, *indexBufferMemory);
-
-    Buffer::copyBuffer(logicalDevice, commandPool, graphicsQueue, stagingBuffer, *indexBuffer, bufferSize);
-
-    vkDestroyBuffer(logicalDevice, stagingBuffer, nullptr);
-    vkFreeMemory(logicalDevice, stagingBufferMemory, nullptr);
-}
 
 void e172vp::Renderer::createDescriptorSetLayout(const vk::Device &logicalDevice, vk::DescriptorSetLayout *descriptorSetLayout) {
     vk::DescriptorSetLayoutBinding uboLayoutBinding;
@@ -455,61 +400,22 @@ void e172vp::Renderer::createDescriptorSetLayout(const vk::Device &logicalDevice
     }
 }
 
-void e172vp::Renderer::createUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> &uniformBuffers, std::vector<vk::DeviceMemory> &uniformBuffersMemory) {
-    const vk::DeviceSize bufferSize = sizeof(UniformBufferObject);
+void e172vp::Renderer::createGlobalUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> *uniformBuffers, std::vector<vk::DeviceMemory> *uniformBuffersMemory) {
+    uniformBuffers->resize(count);
+    uniformBuffersMemory->resize(count);
 
-    uniformBuffers.resize(count);
-    uniformBuffersMemory.resize(count);
-
-    for (size_t i = 0; i < count; i++) {
-        Buffer::createBuffer(logicalDevice, physicalDevice, bufferSize, vk::BufferUsageFlagBits::eUniformBuffer, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, uniformBuffers[i], uniformBuffersMemory[i]);
+    for(decltype (count) i = 0; i < count; ++i) {
+        Buffer::createUniformBuffer<GlobalUniformBufferObject>(
+                    logicalDevice,
+                    physicalDevice,
+                    &uniformBuffers->operator[](i),
+                    &uniformBuffersMemory->operator[](i)
+                    );
     }
+
 }
 
-void e172vp::Renderer::createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool) {
-    vk::DescriptorPoolSize poolSize;
-    poolSize.type = vk::DescriptorType::eUniformBuffer;
-    poolSize.descriptorCount = static_cast<uint32_t>(size);
 
-    vk::DescriptorPoolCreateInfo poolInfo;
-    poolInfo.poolSizeCount = 1;
-    poolInfo.pPoolSizes = &poolSize;
-    poolInfo.maxSets = static_cast<uint32_t>(size);
-
-    if (logicalDevice.createDescriptorPool(&poolInfo, nullptr, uniformDescriptorPool) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to create descriptor pool!");
-    }
-}
-
-void e172vp::Renderer::createDescriptorSets(const vk::Device &logicalDevice, const std::vector<vk::Buffer> &uniformBuffers, const vk::DescriptorSetLayout &descriptorSetLayout, const vk::DescriptorPool &descriptorPool, std::vector<vk::DescriptorSet> *descriptorSets) {
-    std::vector<vk::DescriptorSetLayout> layouts(uniformBuffers.size(), descriptorSetLayout);
-    vk::DescriptorSetAllocateInfo allocInfo;
-    allocInfo.descriptorPool = descriptorPool;
-    allocInfo.descriptorSetCount = static_cast<uint32_t>(uniformBuffers.size());
-    allocInfo.pSetLayouts = layouts.data();
-
-    descriptorSets->resize(uniformBuffers.size());
-    if (logicalDevice.allocateDescriptorSets(&allocInfo, descriptorSets->data()) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to allocate descriptor sets!");
-    }
-
-    for (size_t i = 0; i < uniformBuffers.size(); i++) {
-        vk::DescriptorBufferInfo bufferInfo;
-        bufferInfo.buffer = uniformBuffers[i];
-        bufferInfo.offset = 0;
-        bufferInfo.range = sizeof(UniformBufferObject);
-
-        vk::WriteDescriptorSet descriptorWrite{};
-        descriptorWrite.dstSet = descriptorSets->at(i);
-        descriptorWrite.dstBinding = 0;
-        descriptorWrite.dstArrayElement = 0;
-        descriptorWrite.descriptorType = vk::DescriptorType::eUniformBuffer;
-        descriptorWrite.descriptorCount = 1;
-        descriptorWrite.pBufferInfo = &bufferInfo;
-
-        logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
-    }
-}
 
 vk::ShaderModule e172vp::Renderer::createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code) {
     vk::ShaderModuleCreateInfo createInfo;

@@ -8,6 +8,8 @@
 #include "time/elapsedtimer.h"
 #include "vertex.h"
 
+#include "vertexobject.h"
+
 namespace e172vp {
 
 
@@ -41,13 +43,16 @@ class Renderer {
 
     std::vector<vk::DeviceMemory> uniformBuffersMemory;
 
-    struct UniformBufferObject {
+    struct GlobalUniformBufferObject {
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 proj;
     };
+
+    std::vector<VertexObject> vertexObjects;
 public:
     static std::vector<std::string> glfwExtensions();
+
 
     struct CommandReciept {
         float offsetX;
@@ -63,32 +68,10 @@ public:
     static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const vk::DescriptorSetLayout &descriptorSetLayout, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
     static void createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
 
-    void createVertexBuffer(
-            const vk::Device &logicalDevice,
-            const vk::PhysicalDevice &physicalDevice,
-            const vk::CommandPool &commandPool,
-            const vk::Queue &graphicsQueue,
-            const std::vector<Vertex> &vertices,
-            vk::Buffer *vertexBuffer,
-            vk::DeviceMemory *vertexBufferMemory
-            );
-
-    void createIndexBuffer(
-            const vk::Device &logicalDevice,
-            const vk::PhysicalDevice &physicalDevice,
-            const vk::CommandPool &commandPool,
-            const vk::Queue &graphicsQueue,
-            const std::vector<uint16_t> &indices,
-            vk::Buffer *indexBuffer,
-            vk::DeviceMemory *indexBufferMemory
-            );
 
     static void createDescriptorSetLayout(const vk::Device &logicalDevice, vk::DescriptorSetLayout *descriptorSetLayout);
 
-    static void createUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> &uniformBuffers, std::vector<vk::DeviceMemory> &uniformBuffersMemory);
-
-    static void createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool);
-    static void createDescriptorSets(const vk::Device &logicalDevice, const std::vector<vk::Buffer> &uniformBuffers, const vk::DescriptorSetLayout &descriptorSetLayout, const vk::DescriptorPool &descriptorPool, std::vector<vk::DescriptorSet> *descriptorSets);
+    static void createGlobalUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> *uniformBuffers, std::vector<vk::DeviceMemory> *uniformBuffersMemory);
 
     static vk::ShaderModule createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code);
     static std::vector<char> readFile(const std::string &filename);

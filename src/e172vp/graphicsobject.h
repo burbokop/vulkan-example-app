@@ -27,6 +27,7 @@ class GraphicsObject {
     e172vp::SwapChain m_swapChain;
     e172vp::RenderPass m_renderPass;
     e172vp::CommandPool m_commandPool;
+    vk::DescriptorPool m_descriptorPool;
 
     e172vp::Hardware::QueueFamilies m_queueFamilies;
     e172vp::SwapChain::Settings m_swapChainSettings;
@@ -35,7 +36,10 @@ class GraphicsObject {
     bool m_debugEnabled = false;
     bool m_isValid = false;
     std::vector<std::string> m_errors;
+
+
 public:
+    static void createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool, std::vector<std::string> *m_errors);
     GraphicsObject() {}
     GraphicsObject(const GraphicsObjectCreateInfo &createInfo);
 
@@ -55,6 +59,7 @@ public:
     std::vector<std::string> pullErrors();
     bool isValid() const;
     bool debugEnabled() const;
+    vk::DescriptorPool descriptorPool() const;
 };
 
 }

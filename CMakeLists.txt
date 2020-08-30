@@ -39,6 +39,8 @@ add_executable(vulkan-app
     src/e172vp/vertex.h
     src/e172vp/tools/buffer.cpp
     src/e172vp/tools/buffer.h
+    src/e172vp/vertexobject.cpp
+    src/e172vp/vertexobject.h
 
     src/e172vp/time/time.h
     src/e172vp/time/time.cpp

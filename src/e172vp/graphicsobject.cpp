@@ -31,6 +31,27 @@ std::vector<std::string> e172vp::GraphicsObject::pullErrors() {
     return r;
 }
 
+vk::DescriptorPool e172vp::GraphicsObject::descriptorPool() const
+{
+    return m_descriptorPool;
+}
+
+void e172vp::GraphicsObject::createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool, std::vector<std::string> *m_errors) {
+    vk::DescriptorPoolSize poolSize;
+    poolSize.type = vk::DescriptorType::eUniformBuffer;
+    poolSize.descriptorCount = static_cast<uint32_t>(size);
+
+    vk::DescriptorPoolCreateInfo poolInfo;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+    poolInfo.maxSets = static_cast<uint32_t>(size);
+
+    if (logicalDevice.createDescriptorPool(&poolInfo, nullptr, uniformDescriptorPool) != vk::Result::eSuccess) {
+        if(m_errors)
+            m_errors->push_back("[error] e172vp::GraphicsObject: failed to create descriptor pool!");
+    }
+}
+
 e172vp::GraphicsObject::GraphicsObject(const GraphicsObjectCreateInfo &createInfo) {
     m_debugEnabled = createInfo.debugEnabled();
     e172vp::VulkanInstanceFactory vulkanInstanceFactory("test", VK_MAKE_VERSION(1, 0, 0));
@@ -78,6 +99,9 @@ e172vp::GraphicsObject::GraphicsObject(const GraphicsObjectCreateInfo &createInf
     m_renderPass = e172vp::RenderPass(m_logicalDevice, m_swapChain);
     m_commandPool = e172vp::CommandPool(m_logicalDevice, m_queueFamilies, m_swapChain.imageCount());
 
+    createDescriptorPool(m_logicalDevice, createInfo.descriptorPoolSize(), &m_descriptorPool, &m_errors);
+
     m_isValid = m_swapChain.isValid() && m_renderPass.isValid() && m_commandPool.isValid();
+
 }
 

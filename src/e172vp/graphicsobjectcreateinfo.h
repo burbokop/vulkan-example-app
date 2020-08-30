@@ -15,6 +15,7 @@ class GraphicsObjectCreateInfo {
     std::vector<std::string> m_requiredExtensions;
     std::vector<std::string> m_requiredDeviceExtensions;
     std::function<void(vk::Instance, vk::SurfaceKHR*)> m_surfaceCreator;
+    size_t m_descriptorPoolSize = 256;
     bool m_debugEnabled = false;
 public:
     GraphicsObjectCreateInfo();
@@ -31,6 +32,8 @@ public:
     void setDebugEnabled(bool debugEnabled);
     std::vector<std::string> requiredDeviceExtensions() const;
     void setRequiredDeviceExtensions(const std::vector<std::string> &requiredDeviceExtensions);
+    size_t descriptorPoolSize() const;
+    void setDescriptorPoolSize(const size_t &descriptorPoolSize);
 };
 
 }
