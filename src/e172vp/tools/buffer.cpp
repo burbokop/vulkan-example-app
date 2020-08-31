@@ -94,7 +94,7 @@ void e172vp::Buffer::createVertexBuffer(const vk::Device &logicalDevice, const v
     vkFreeMemory(logicalDevice, stagingBufferMemory, nullptr);
 }
 
-void e172vp::Buffer::createIndexBuffer(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &graphicsQueue, const std::vector<uint16_t> &indices, vk::Buffer *indexBuffer, vk::DeviceMemory *indexBufferMemory) {
+void e172vp::Buffer::createIndexBuffer(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &graphicsQueue, const std::vector<uint32_t> &indices, vk::Buffer *indexBuffer, vk::DeviceMemory *indexBufferMemory) {
     VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
     vk::Buffer stagingBuffer;
@@ -125,7 +125,7 @@ void e172vp::Buffer::createVertexBuffer(const e172vp::GraphicsObject *graphicsOb
     createVertexBuffer(graphicsObject->logicalDevice(), graphicsObject->physicalDevice(), graphicsObject->commandPool(), graphicsObject->graphicsQueue(), vertices, vertexBuffer, vertexBufferMemory);
 }
 
-void e172vp::Buffer::createIndexBuffer(const e172vp::GraphicsObject *graphicsObject, const std::vector<uint16_t> &indices, vk::Buffer *indexBuffer, vk::DeviceMemory *indexBufferMemory) {
+void e172vp::Buffer::createIndexBuffer(const e172vp::GraphicsObject *graphicsObject, const std::vector<uint32_t> &indices, vk::Buffer *indexBuffer, vk::DeviceMemory *indexBufferMemory) {
     createIndexBuffer(graphicsObject->logicalDevice(), graphicsObject->physicalDevice(), graphicsObject->commandPool(), graphicsObject->graphicsQueue(), indices, indexBuffer, indexBufferMemory);
 }
 

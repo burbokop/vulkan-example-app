@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 
-
-
-
 add_executable(vulkan-app
     src/e172vp/graphicsobject.cpp
     src/e172vp/graphicsobject.h
@@ -47,8 +44,14 @@ add_executable(vulkan-app
     src/e172vp/time/time.cpp
     src/e172vp/time/elapsedtimer.h
     src/e172vp/time/elapsedtimer.cpp
+    src/e172vp/tools/mesh.cpp
+    src/e172vp/tools/mesh.h
+    src/e172vp/pipeline.cpp
+    src/e172vp/pipeline.h
+
     src/main.cpp
-    )
+    src/resources.cpp
+)
 
 
 

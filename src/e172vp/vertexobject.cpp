@@ -7,7 +7,7 @@ std::vector<vk::DescriptorSet> e172vp::VertexObject::descriptorSets() const {
     return m_descriptorSets;
 }
 
-e172vp::VertexObject::VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint16_t> &indices) {
+e172vp::VertexObject::VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices) {
     Buffer::createVertexBuffer(graphicsObject, vertices, &m_vertexBuffer, &m_vertexBufferMemory);
     Buffer::createIndexBuffer(graphicsObject, indices, &m_indexBuffer, &m_indexBufferMemory);
     Buffer::createUniformBuffers<ubo>(graphicsObject, imageCount, &m_uniformBuffers, &m_uniformBufferMemories);
@@ -22,18 +22,15 @@ e172vp::GraphicsObject *e172vp::VertexObject::graphicsObject() const {
     return m_graphicsObject;
 }
 
-vk::Buffer e172vp::VertexObject::vertexBuffer() const
-{
+vk::Buffer e172vp::VertexObject::vertexBuffer() const {
     return m_vertexBuffer;
 }
 
-vk::Buffer e172vp::VertexObject::indexBuffer() const
-{
+vk::Buffer e172vp::VertexObject::indexBuffer() const {
     return m_indexBuffer;
 }
 
-uint16_t e172vp::VertexObject::indexCount() const
-{
+uint32_t e172vp::VertexObject::indexCount() const {
     return m_indexCount;
 }
 

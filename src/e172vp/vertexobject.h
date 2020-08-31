@@ -35,15 +35,15 @@ class VertexObject {
     std::vector<vk::DeviceMemory> m_uniformBufferMemories;
 
     std::vector<vk::DescriptorSet> m_descriptorSets;
-    uint16_t m_indexCount;
+    uint32_t m_indexCount;
     ~VertexObject();
-    VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const e172vp::DescriptorSetLayout *descriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint16_t> &indices);
+    VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const e172vp::DescriptorSetLayout *descriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
 public:
     GraphicsObject *graphicsObject() const;
     std::vector<vk::DescriptorSet> descriptorSets() const;
     vk::Buffer vertexBuffer() const;
     vk::Buffer indexBuffer() const;
-    uint16_t indexCount() const;
+    uint32_t indexCount() const;
 
     void updateUbo(int imageIndex);
     glm::mat4 rotation() const;

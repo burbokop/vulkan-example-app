@@ -8,9 +8,10 @@
 namespace e172vp {
 
 struct Vertex {
-    glm::vec2 pos;
+    glm::vec3 position;
     glm::vec3 color;
 
+    static std::vector<Vertex> fromGlm(const std::vector<glm::vec3> &vertices, glm::vec3 color);
     static vk::VertexInputBindingDescription bindingDescription();
     static std::array<vk::VertexInputAttributeDescription, 2> attributeDescriptions();
 };

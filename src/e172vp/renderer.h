@@ -10,6 +10,8 @@
 #include <list>
 #include "vertexobject.h"
 #include "descriptorsetlayout.h"
+#include "tools/mesh.h"
+#include "pipeline.h"
 
 namespace e172vp {
 
@@ -22,8 +24,8 @@ class Renderer {
 
     vk::Semaphore imageAvailableSemaphore;
     vk::Semaphore renderFinishedSemaphore;
-    vk::PipelineLayout pipelineLayout;
-    vk::Pipeline graphicsPipeline;
+
+    Pipeline *pipeline = nullptr;
 
     vk::Buffer vertexBuffer;
     vk::DeviceMemory vertexBufferMemory;
@@ -32,30 +34,17 @@ class Renderer {
 
     e172vp::ElapsedTimer elapsedFromStart;
 
-
-    std::vector<Vertex> vertices;
-    std::vector<uint16_t> indices;
-
     e172vp::DescriptorSetLayout globalDescriptorSetLayout;
     e172vp::DescriptorSetLayout objectDescriptorSetLayout;
-
 
     std::vector<vk::Buffer> uniformBuffers;
     std::vector<vk::DeviceMemory> uniformBuffersMemory;
     std::vector<vk::DescriptorSet> uniformDescriptorSets;
 
 
-    std::vector<vk::Buffer> objectUniformBuffers;
-    std::vector<vk::DeviceMemory> objectUniformBuffersMemory;
-    std::vector<vk::DescriptorSet> objectUniformDescriptorSets;
-
-
     struct GlobalUniformBufferObject {
         glm::vec2 offset;
-    };
-
-    struct VOUniformBufferObject {
-        glm::mat4 model;
+        float currentTime;
     };
 
     std::list<VertexObject*> vertexObjects;
@@ -74,13 +63,12 @@ public:
             );
 
     static void resetCommandBuffers(const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Queue &graphicsQueue, const vk::Queue &presentQueue);
-    static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::DescriptorSetLayout> &descriptorSetLayouts, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
     static void createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
 
-    static vk::ShaderModule createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code);
     static std::vector<char> readFile(const std::string &filename);
 
-    VertexObject *addVertexObject(const std::vector<Vertex> &vertices, const std::vector<uint16_t> &indices);
+    VertexObject *addVertexObject(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
+    VertexObject *addVertexObject(const Mesh &mesh);
     bool removeVertexObject(VertexObject *vertexObject);
     Renderer();
 
