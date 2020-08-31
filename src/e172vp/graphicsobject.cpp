@@ -31,8 +31,7 @@ std::vector<std::string> e172vp::GraphicsObject::pullErrors() {
     return r;
 }
 
-vk::DescriptorPool e172vp::GraphicsObject::descriptorPool() const
-{
+vk::DescriptorPool e172vp::GraphicsObject::descriptorPool() const {
     return m_descriptorPool;
 }
 

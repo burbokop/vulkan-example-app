@@ -41,7 +41,8 @@ add_executable(vulkan-app
     src/e172vp/tools/buffer.h
     src/e172vp/vertexobject.cpp
     src/e172vp/vertexobject.h
-
+    src/e172vp/descriptorsetlayout.cpp
+    src/e172vp/descriptorsetlayout.h
     src/e172vp/time/time.h
     src/e172vp/time/time.cpp
     src/e172vp/time/elapsedtimer.h

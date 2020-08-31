@@ -129,16 +129,19 @@ void e172vp::Buffer::createIndexBuffer(const e172vp::GraphicsObject *graphicsObj
     createIndexBuffer(graphicsObject->logicalDevice(), graphicsObject->physicalDevice(), graphicsObject->commandPool(), graphicsObject->graphicsQueue(), indices, indexBuffer, indexBufferMemory);
 }
 
-void e172vp::Buffer::createUniformDescriptorSets(const vk::Device &logicalDevice, const vk::DescriptorPool &descriptorPool, size_t structSize, const std::vector<vk::Buffer> &uniformBuffers, const vk::DescriptorSetLayout &descriptorSetLayout, std::vector<vk::DescriptorSet> *descriptorSets) {
-    std::vector<vk::DescriptorSetLayout> layouts(uniformBuffers.size(), descriptorSetLayout);
+
+void e172vp::Buffer::createUniformDescriptorSets(const vk::Device &logicalDevice, const vk::DescriptorPool &descriptorPool, size_t structSize, const std::vector<vk::Buffer> &uniformBuffers, const e172vp::DescriptorSetLayout *descriptorSetLayout, std::vector<vk::DescriptorSet> *descriptorSets) {
+    std::vector<vk::DescriptorSetLayout> layouts(uniformBuffers.size(), descriptorSetLayout->descriptorSetLayoutHandle());
     vk::DescriptorSetAllocateInfo allocInfo;
     allocInfo.descriptorPool = descriptorPool;
     allocInfo.descriptorSetCount = static_cast<uint32_t>(uniformBuffers.size());
     allocInfo.pSetLayouts = layouts.data();
 
     descriptorSets->resize(uniformBuffers.size());
-    if (logicalDevice.allocateDescriptorSets(&allocInfo, descriptorSets->data()) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to allocate descriptor sets!");
+
+    const auto code = logicalDevice.allocateDescriptorSets(&allocInfo, descriptorSets->data());
+    if (code != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to allocate descriptor sets: " + vk::to_string(code));
     }
 
     for (size_t i = 0; i < uniformBuffers.size(); i++) {
@@ -147,11 +150,11 @@ void e172vp::Buffer::createUniformDescriptorSets(const vk::Device &logicalDevice
         bufferInfo.offset = 0;
         bufferInfo.range = structSize;
 
-        vk::WriteDescriptorSet descriptorWrite{};
+        vk::WriteDescriptorSet descriptorWrite;
         descriptorWrite.dstSet = descriptorSets->at(i);
-        descriptorWrite.dstBinding = 0;
+        descriptorWrite.dstBinding = descriptorSetLayout->binding();
         descriptorWrite.dstArrayElement = 0;
-        descriptorWrite.descriptorType = vk::DescriptorType::eUniformBuffer;
+        descriptorWrite.descriptorType = descriptorType;
         descriptorWrite.descriptorCount = 1;
         descriptorWrite.pBufferInfo = &bufferInfo;
 

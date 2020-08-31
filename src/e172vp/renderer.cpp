@@ -58,12 +58,19 @@ e172vp::Renderer::Renderer() {
 
     Buffer::createVertexBuffer(&m_graphicsObject, vertices, &vertexBuffer, &vertexBufferMemory);
     Buffer::createIndexBuffer(&m_graphicsObject, indices, &indexBuffer, &indexBufferMemory);
-    createDescriptorSetLayout(m_graphicsObject.logicalDevice(), &descriptorSetLayout);
-    createGlobalUniformBuffers(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.swapChain().imageCount(), &uniformBuffers, &uniformBuffersMemory);
-    GraphicsObject::createDescriptorPool(m_graphicsObject.logicalDevice(), uniformBuffers.size(), &uniformDescriptorPool, nullptr);
-    Buffer::createUniformDescriptorSets<GlobalUniformBufferObject>(m_graphicsObject.logicalDevice(), uniformDescriptorPool, uniformBuffers, descriptorSetLayout, &uniformDescriptorSets);
 
-    createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), descriptorSetLayout, &pipelineLayout, &graphicsPipeline);
+    globalDescriptorSetLayout = DescriptorSetLayout::create(m_graphicsObject.logicalDevice(), 0);
+    objectDescriptorSetLayout = DescriptorSetLayout::create(m_graphicsObject.logicalDevice(), 1);
+
+
+    Buffer::createUniformBuffers<GlobalUniformBufferObject>(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &uniformBuffers, &uniformBuffersMemory);
+    Buffer::createUniformDescriptorSets<GlobalUniformBufferObject>(m_graphicsObject.logicalDevice(), m_graphicsObject.descriptorPool(), uniformBuffers, &globalDescriptorSetLayout, &uniformDescriptorSets);
+
+    Buffer::createUniformBuffers<VOUniformBufferObject>(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectUniformBuffers, &objectUniformBuffersMemory);
+    Buffer::createUniformDescriptorSets<VOUniformBufferObject>(m_graphicsObject.logicalDevice(), m_graphicsObject.descriptorPool(), objectUniformBuffers, &objectDescriptorSetLayout, &objectUniformDescriptorSets);
+
+
+    createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), { globalDescriptorSetLayout.descriptorSetLayoutHandle(), objectDescriptorSetLayout.descriptorSetLayoutHandle() }, &pipelineLayout, &graphicsPipeline);
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
 
 
@@ -77,13 +84,7 @@ bool e172vp::Renderer::isAlive() const {
 
 void e172vp::Renderer::applyPresentation() {
     resetCommandBuffers(m_graphicsObject.commandPool().commandBufferVector(), m_graphicsObject.graphicsQueue(), m_graphicsObject.presentQueue());
-    CommandReciept reciept;
-    reciept.verticeCount = std::fmod(elapsedFromStart.elapsed() * 0.001, 5);
-    reciept.verticeCount = vertices.size();
-    reciept.indexCount = indices.size();
-    reciept.offsetX = (std::cos(elapsedFromStart.elapsed() * 0.001)) * 100.;
-    reciept.offsetY = (std::sin(elapsedFromStart.elapsed() * 0.001)) * 100.;
-    proceedCommandBuffers(m_graphicsObject.renderPass(), graphicsPipeline, pipelineLayout, m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass().frameBufferVector(), m_graphicsObject.commandPool().commandBufferVector(), uniformDescriptorSets, vertexBuffer, indexBuffer, reciept);
+    proceedCommandBuffers(m_graphicsObject.renderPass(), graphicsPipeline, pipelineLayout, m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass().frameBufferVector(), m_graphicsObject.commandPool().commandBufferVector(), uniformDescriptorSets, vertexObjects);
 
     uint32_t imageIndex = 0;
     vk::Result returnCode;
@@ -100,6 +101,10 @@ void e172vp::Renderer::applyPresentation() {
 
 
     updateUniformBuffer(imageIndex);
+
+    for(auto o : vertexObjects) {
+        o->updateUbo(imageIndex);
+    }
 
     vk::SubmitInfo submitInfo{};
     submitInfo.waitSemaphoreCount = 1;
@@ -132,38 +137,15 @@ void e172vp::Renderer::applyPresentation() {
 
 void e172vp::Renderer::updateUniformBuffer(uint32_t currentImage) {
     static auto startTime = std::chrono::high_resolution_clock::now();
-
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-    GlobalUniformBufferObject ubo{};
-
-    glm::mat4 singleMatrix {
-        { 1, 0, 0, 0 },
-        { 0, 1, 0, 0 },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 }
-    };
-
-    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    //ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    //ubo.proj = glm::perspective(glm::radians(45.0f), m_graphicsObject.swapChainSettings().extent.width / (float) m_graphicsObject.swapChainSettings().extent.height, 0.1f, 10.0f);
-    //ubo.proj[1][1] *= -1;
-
-    //ubo.model = singleMatrix;
-    ubo.view = singleMatrix;
-    ubo.proj = singleMatrix;
-
+    GlobalUniformBufferObject ubo;
+    ubo.offset = { std::cos(time * 0.2) * 0.2, std::sin(time * 0.2) * 0.2 };
     void* data;
     vkMapMemory(m_graphicsObject.logicalDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
     memcpy(data, &ubo, sizeof(ubo));
     vkUnmapMemory(m_graphicsObject.logicalDevice(), uniformBuffersMemory[currentImage]);
 }
-
-
-
-
-
 
 
 std::vector<std::string> e172vp::Renderer::glfwExtensions() {
@@ -179,10 +161,10 @@ std::vector<std::string> e172vp::Renderer::glfwExtensions() {
     return result;
 }
 
-void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::PipelineLayout &pipelineLayout, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const std::vector<vk::DescriptorSet> &uniformDescriptorSets, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const e172vp::Renderer::CommandReciept &reciept) {
+void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::PipelineLayout &pipelineLayout, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const std::vector<vk::DescriptorSet> &uniformDescriptorSets, const std::list<VertexObject *> &vertexObjects) {
     for (size_t i = 0; i < commandBuffers.size(); i++) {
         vk::CommandBufferBeginInfo beginInfo{};
-        if (commandBuffers.at(i).begin(&beginInfo) != vk::Result::eSuccess) {
+        if (commandBuffers[i].begin(&beginInfo) != vk::Result::eSuccess) {
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
@@ -197,29 +179,30 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
         renderPassInfo.pClearValues = &clearColor;
 
         vk::Viewport viewport;
-        viewport.setX(reciept.offsetX);
+        viewport.setX(0);
         viewport.setWidth(extent.width);
-        viewport.setY(reciept.offsetY);
+        viewport.setY(0);
         viewport.setHeight(extent.height);
         viewport.setMinDepth(0.0f);
         viewport.setMaxDepth(1.0f);
-
-
 
         commandBuffers[i].beginRenderPass(&renderPassInfo, vk::SubpassContents::eInline);
         commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
         commandBuffers[i].setViewport(0, 1, &viewport);
 
-        vk::Buffer vertexBuffers[] = { vertexBuffer };
-        vk::DeviceSize offsets[] = { 0 };
-        commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
+        for(auto object : vertexObjects) {
+            vk::Buffer vb[] = { object->vertexBuffer() };
+            vk::DeviceSize offsets[] = { 0 };
+            commandBuffers[i].bindVertexBuffers(0, 1, vb, offsets);
+            commandBuffers[i].bindIndexBuffer(object->indexBuffer(), 0, vk::IndexType::eUint16);
 
-        commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint16);
-        commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, 1, &uniformDescriptorSets[i], 0, nullptr);
-        commandBuffers[i].drawIndexed(static_cast<uint32_t>(reciept.indexCount), 1, 0, 0, 0);
+            commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, { uniformDescriptorSets[i], object->descriptorSets()[i] }, {});
+            commandBuffers[i].drawIndexed(object->indexCount(), 1, 0, 0, 0);
+        }
 
         commandBuffers[i].endRenderPass();
         commandBuffers[i].end();
+
     }
 }
 
@@ -232,12 +215,12 @@ void e172vp::Renderer::resetCommandBuffers(const std::vector<vk::CommandBuffer> 
     }
 }
 
-void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const vk::DescriptorSetLayout& descriptorSetLayout, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline) {
+void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::DescriptorSetLayout> &descriptorSetLayouts, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline) {
     bool useUniformBuffer = true;
 
     std::vector<char> vertShaderCode;
     if(useUniformBuffer) {
-        vertShaderCode = readFile("../shaders/vertex_buffer.spv");
+        vertShaderCode = readFile("../shaders/vert_uniform.spv");
     } else {
         vertShaderCode = readFile("../shaders/vert.spv");
     }
@@ -291,16 +274,16 @@ void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, con
     viewportState.pScissors = &scissor;
 
     vk::PipelineRasterizationStateCreateInfo rasterizer{};
-    rasterizer.depthClampEnable = VK_FALSE;
-    rasterizer.rasterizerDiscardEnable = VK_FALSE;
+    rasterizer.depthClampEnable = false;
+    rasterizer.rasterizerDiscardEnable = false;
     rasterizer.polygonMode = vk::PolygonMode::eFill;
     rasterizer.lineWidth = 1.0f;
     rasterizer.cullMode = vk::CullModeFlagBits::eBack;
     rasterizer.frontFace = vk::FrontFace::eClockwise;
-    rasterizer.depthBiasEnable = VK_FALSE;
+    rasterizer.depthBiasEnable = false;
 
     vk::PipelineMultisampleStateCreateInfo multisampling{};
-    multisampling.sampleShadingEnable = VK_FALSE;
+    multisampling.sampleShadingEnable = false;
     multisampling.rasterizationSamples = vk::SampleCountFlagBits::e1;
 
     vk::PipelineColorBlendAttachmentState colorBlendAttachment{};
@@ -313,7 +296,7 @@ void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, con
     colorBlendAttachment.blendEnable = false;
 
     vk::PipelineColorBlendStateCreateInfo colorBlending{};
-    colorBlending.logicOpEnable = VK_FALSE;
+    colorBlending.logicOpEnable = false;
     colorBlending.logicOp = vk::LogicOp::eCopy;
     colorBlending.attachmentCount = 1;
     colorBlending.pAttachments = &colorBlendAttachment;
@@ -324,14 +307,13 @@ void e172vp::Renderer::createGraphicsPipeline(const vk::Device &logicDevice, con
 
     vk::PipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.pushConstantRangeCount = 0;
-    pipelineLayoutInfo.setLayoutCount = 1;
-    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+    pipelineLayoutInfo.setSetLayouts(descriptorSetLayouts);
 
     if (logicDevice.createPipelineLayout(&pipelineLayoutInfo, nullptr, pipelineLayout) != vk::Result::eSuccess) {
         throw std::runtime_error("failed to create pipeline layout!");
     }
 
-    vk::GraphicsPipelineCreateInfo pipelineInfo{};
+    vk::GraphicsPipelineCreateInfo pipelineInfo;
     pipelineInfo.stageCount = 2;
     pipelineInfo.pStages = shaderStages;
     pipelineInfo.pVertexInputState = &vertexInputInfo;
@@ -371,6 +353,22 @@ std::vector<char> e172vp::Renderer::readFile(const std::string &filename) {
     return buffer;
 }
 
+e172vp::VertexObject *e172vp::Renderer::addVertexObject(const std::vector<e172vp::Vertex> &vertices, const std::vector<uint16_t> &indices) {
+    const auto r = new VertexObject(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectDescriptorSetLayout, vertices, indices);
+    vertexObjects.push_back(r);
+    return r;
+}
+
+bool e172vp::Renderer::removeVertexObject(e172vp::VertexObject *vertexObject) {
+    const auto it = std::find(vertexObjects.begin(), vertexObjects.end(), vertexObject);
+    if(it != vertexObjects.end()) {
+        delete vertexObject;
+        vertexObjects.erase(it);
+        return true;
+    }
+    return true;
+}
+
 void e172vp::Renderer::createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore) {
     vk::SemaphoreCreateInfo semaphoreInfo;
     if (
@@ -379,42 +377,6 @@ void e172vp::Renderer::createSyncObjects(const vk::Device &logicDevice, vk::Sema
             )
         throw std::runtime_error("failed to create synchronization objects for a frame!");
 }
-
-
-
-
-void e172vp::Renderer::createDescriptorSetLayout(const vk::Device &logicalDevice, vk::DescriptorSetLayout *descriptorSetLayout) {
-    vk::DescriptorSetLayoutBinding uboLayoutBinding;
-    uboLayoutBinding.binding = 0;
-    uboLayoutBinding.descriptorCount = 1;
-    uboLayoutBinding.descriptorType = vk::DescriptorType::eUniformBuffer;
-    uboLayoutBinding.pImmutableSamplers = nullptr;
-    uboLayoutBinding.stageFlags = vk::ShaderStageFlagBits::eVertex;
-
-    vk::DescriptorSetLayoutCreateInfo layoutInfo;
-    layoutInfo.bindingCount = 1;
-    layoutInfo.pBindings = &uboLayoutBinding;
-
-    if (logicalDevice.createDescriptorSetLayout(&layoutInfo, nullptr, descriptorSetLayout) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to create descriptor set layout!");
-    }
-}
-
-void e172vp::Renderer::createGlobalUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> *uniformBuffers, std::vector<vk::DeviceMemory> *uniformBuffersMemory) {
-    uniformBuffers->resize(count);
-    uniformBuffersMemory->resize(count);
-
-    for(decltype (count) i = 0; i < count; ++i) {
-        Buffer::createUniformBuffer<GlobalUniformBufferObject>(
-                    logicalDevice,
-                    physicalDevice,
-                    &uniformBuffers->operator[](i),
-                    &uniformBuffersMemory->operator[](i)
-                    );
-    }
-
-}
-
 
 
 vk::ShaderModule e172vp::Renderer::createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code) {

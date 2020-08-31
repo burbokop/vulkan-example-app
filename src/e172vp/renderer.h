@@ -7,8 +7,9 @@
 #include <GLFW/glfw3.h>
 #include "time/elapsedtimer.h"
 #include "vertex.h"
-
+#include <list>
 #include "vertexobject.h"
+#include "descriptorsetlayout.h"
 
 namespace e172vp {
 
@@ -35,46 +36,52 @@ class Renderer {
     std::vector<Vertex> vertices;
     std::vector<uint16_t> indices;
 
-    vk::DescriptorSetLayout descriptorSetLayout;
+    e172vp::DescriptorSetLayout globalDescriptorSetLayout;
+    e172vp::DescriptorSetLayout objectDescriptorSetLayout;
+
+
     std::vector<vk::Buffer> uniformBuffers;
-    vk::DescriptorPool uniformDescriptorPool;
+    std::vector<vk::DeviceMemory> uniformBuffersMemory;
     std::vector<vk::DescriptorSet> uniformDescriptorSets;
 
 
-    std::vector<vk::DeviceMemory> uniformBuffersMemory;
+    std::vector<vk::Buffer> objectUniformBuffers;
+    std::vector<vk::DeviceMemory> objectUniformBuffersMemory;
+    std::vector<vk::DescriptorSet> objectUniformDescriptorSets;
+
 
     struct GlobalUniformBufferObject {
-        glm::mat4 model;
-        glm::mat4 view;
-        glm::mat4 proj;
+        glm::vec2 offset;
     };
 
-    std::vector<VertexObject> vertexObjects;
+    struct VOUniformBufferObject {
+        glm::mat4 model;
+    };
+
+    std::list<VertexObject*> vertexObjects;
 public:
     static std::vector<std::string> glfwExtensions();
 
+    static void proceedCommandBuffers(
+            const vk::RenderPass &renderPass,
+            const vk::Pipeline &pipeline,
+            const vk::PipelineLayout &pipelineLayout,
+            const vk::Extent2D &extent,
+            const std::vector<vk::Framebuffer> &swapChainFramebuffers,
+            const std::vector<vk::CommandBuffer> &commandBuffers,
+            const std::vector<vk::DescriptorSet> &uniformDescriptorSets,
+            const std::list<VertexObject *> &vertexObjects
+            );
 
-    struct CommandReciept {
-        float offsetX;
-        float offsetY;
-        size_t verticeCount = 0;
-        size_t indexCount = 0;
-        std::vector<vk::Offset2D> points;
-        std::vector<vk::Rect2D> rects;
-    };
-
-    static void proceedCommandBuffers(const vk::RenderPass &renderPass, const vk::Pipeline &pipeline, const vk::PipelineLayout &pipelineLayout, const vk::Extent2D &extent, const std::vector<vk::Framebuffer> &swapChainFramebuffers, const std::vector<vk::CommandBuffer> &commandBuffers, const std::vector<vk::DescriptorSet> &uniformDescriptorSets, const vk::Buffer &vertexBuffer, const vk::Buffer &indexBuffer, const CommandReciept &reciept);
     static void resetCommandBuffers(const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Queue &graphicsQueue, const vk::Queue &presentQueue);
-    static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const vk::DescriptorSetLayout &descriptorSetLayout, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
+    static void createGraphicsPipeline(const vk::Device &logicDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::DescriptorSetLayout> &descriptorSetLayouts, vk::PipelineLayout *pipelineLayout, vk::Pipeline *graphicsPipline);
     static void createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
-
-
-    static void createDescriptorSetLayout(const vk::Device &logicalDevice, vk::DescriptorSetLayout *descriptorSetLayout);
-
-    static void createGlobalUniformBuffers(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, size_t count, std::vector<vk::Buffer> *uniformBuffers, std::vector<vk::DeviceMemory> *uniformBuffersMemory);
 
     static vk::ShaderModule createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code);
     static std::vector<char> readFile(const std::string &filename);
+
+    VertexObject *addVertexObject(const std::vector<Vertex> &vertices, const std::vector<uint16_t> &indices);
+    bool removeVertexObject(VertexObject *vertexObject);
     Renderer();
 
     bool isAlive() const;
