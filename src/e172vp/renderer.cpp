@@ -67,28 +67,7 @@ e172vp::Renderer::Renderer() {
 
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
 
-
-    font = new Font(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), "../fonts/ZCOOL.ttf");
-
-    auto AChar = font->character('B');
-
-
-    int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load("../image/image.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-
-    if (!pixels) {
-        throw std::runtime_error("failed to load texture image!");
-    }
-
-    std::cout << "image channels: " << texChannels << "\n";
-
-
-    vk::Image iii;
-    vk::DeviceMemory iii_dm;
-    Font::createTextureImage32(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), pixels, texWidth, texHeight, vk::Format::eR8G8B8Srgb, &iii, &iii_dm);
-    stbi_image_free(pixels);
-
-    aCharImageView = Font::createImageView(m_graphicsObject.logicalDevice(), iii, AChar.imageFormat);
+    font = new Font(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), "../fonts/ZCOOL.ttf", 128);
 
     elapsedFromStart.reset();
 }
@@ -122,23 +101,22 @@ void e172vp::Renderer::applyPresentation() {
         o->updateUbo(imageIndex);
     }
 
-    vk::SubmitInfo submitInfo{};
+    vk::SubmitInfo submitInfo;
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
     submitInfo.setCommandBuffers(currentImageCommandBuffer);
     submitInfo.setSignalSemaphores(renderFinishedSemaphore);
-    //submitInfo.signalSemaphoreCount = 1;
-    //submitInfo.pSignalSemaphores = signalSemaphores;
 
     returnCode = m_graphicsObject.graphicsQueue().submit(1, &submitInfo, {});
+
 
     if (returnCode != vk::Result::eSuccess)
         throw std::runtime_error("failed to submit draw command buffer. code: " + vk::to_string(returnCode));
 
     vk::SwapchainKHR swapChains[] = { m_graphicsObject.swapChain() };
 
-    vk::PresentInfoKHR presentInfo{};
+    vk::PresentInfoKHR presentInfo;
     presentInfo.setWaitSemaphores(renderFinishedSemaphore);
     presentInfo.swapchainCount = 1;
     presentInfo.pSwapchains = swapChains;
@@ -185,9 +163,15 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
             throw std::runtime_error("failed to begin recording command buffer!");
         }
 
-        const vk::ClearValue clearColor = vk::ClearColorValue(std::array<float, 4> { 0.3f, 0.3f, 0.0f, 0.4f });
+        //#1A0033
+        const vk::ClearValue clearColor = vk::ClearColorValue(std::array<float, 4> {
+                                                                  0x1a / 256.,
+                                                                  0x00 / 256.,
+                                                                  0x33 / 256.,
+                                                                  0.4f
+                                                              });
 
-        vk::RenderPassBeginInfo renderPassInfo {};
+        vk::RenderPassBeginInfo renderPassInfo;
         renderPassInfo.renderPass = renderPass;
         renderPassInfo.framebuffer = swapChainFramebuffers[i];
         renderPassInfo.renderArea.offset = vk::Offset2D();
@@ -207,6 +191,7 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
         commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
         commandBuffers[i].setViewport(0, 1, &viewport);
 
+
         for(auto object : vertexObjects) {
             vk::Buffer vb[] = { object->vertexBuffer() };
             vk::DeviceSize offsets[] = { 0 };
@@ -218,6 +203,9 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
             commandBuffers[i].drawIndexed(object->indexCount(), 1, 0, 0, 0);
         }
 
+
+//        vk::ImageBlit blit;
+//        commandBuffers[i].blitImage(fgImage, vk::ImageLayout::eUndefined, swapChainImages[i], vk::ImageLayout::eTransferDstOptimal, { blit }, vk::Filter::eLinear);
         commandBuffers[i].endRenderPass();
         commandBuffers[i].end();
 
@@ -252,7 +240,24 @@ std::vector<char> e172vp::Renderer::readFile(const std::string &filename) {
 }
 
 e172vp::VertexObject *e172vp::Renderer::addVertexObject(const std::vector<e172vp::Vertex> &vertices, const std::vector<uint32_t> &indices) {
-    const auto r = new VertexObject(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectDescriptorSetLayout, &samplerDescriptorSetLayout, vertices, indices, aCharImageView);
+    const auto r = new VertexObject(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectDescriptorSetLayout, &samplerDescriptorSetLayout, vertices, indices, font->character('F').imageView());
+    vertexObjects.push_back(r);
+    return r;
+}
+
+e172vp::VertexObject *e172vp::Renderer::addCharacter(char c) {
+    const static std::vector<e172vp::Vertex> v = {
+        { { -0.1f, -0.1f, 0 }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+        { { 0.1f, -0.1f, 0 }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } },
+        { { 0.1f, 0.1f, 0 }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+        { { -0.1f, 0.1f, 0 }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
+    };
+    const static std::vector<uint32_t> i = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    const auto r = new VertexObject(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectDescriptorSetLayout, &samplerDescriptorSetLayout, v, i, font->character(c).imageView());
     vertexObjects.push_back(r);
     return r;
 }

@@ -93,28 +93,33 @@ e172vp::SwapChain::Settings e172vp::SwapChain::createSettings(const e172vp::Hard
 
 bool e172vp::SwapChain::createImageViewes(const vk::Device &logicDevice, const std::vector<vk::Image> &swapChainImages, const vk::Format &swapChainImageFormat, std::vector<vk::ImageView> *swapChainImageViews, std::vector<std::string> *error_queue) {
     swapChainImageViews->resize(swapChainImages.size());
-    for (size_t i = 0; i < swapChainImages.size(); i++) {
-        vk::ImageViewCreateInfo createInfo{};
-        createInfo.image = swapChainImages[i];
-        createInfo.viewType = vk::ImageViewType::e2D;
-        createInfo.format = swapChainImageFormat;
-        createInfo.components.r = vk::ComponentSwizzle::eIdentity;
-        createInfo.components.g = vk::ComponentSwizzle::eIdentity;
-        createInfo.components.b = vk::ComponentSwizzle::eIdentity;
-        createInfo.components.a = vk::ComponentSwizzle::eIdentity;
-        createInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
-        createInfo.subresourceRange.baseMipLevel = 0;
-        createInfo.subresourceRange.levelCount = 1;
-        createInfo.subresourceRange.baseArrayLayer = 0;
-        createInfo.subresourceRange.layerCount = 1;
 
-        const auto code = logicDevice.createImageView(&createInfo, nullptr, &swapChainImageViews->operator[](i));
-        if (code != vk::Result::eSuccess) {
-            error_queue->push_back("[error] Failed to create image views: " + vk::to_string(code));
+    for (uint32_t i = 0; i < swapChainImages.size(); i++) {
+        swapChainImageViews->operator[](i) = createImageView(logicDevice, swapChainImages[i], swapChainImageFormat, error_queue);
+        if(!swapChainImageViews->operator[](i))
             return false;
-        }
     }
     return true;
+}
+
+vk::ImageView e172vp::SwapChain::createImageView(const vk::Device &logicalDevice, vk::Image image, vk::Format format, std::vector<std::string> *error_queue) {
+    vk::ImageViewCreateInfo viewInfo;
+    viewInfo.image = image;
+    viewInfo.viewType = vk::ImageViewType::e2D;
+    viewInfo.format = format;
+    viewInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
+    viewInfo.subresourceRange.baseMipLevel = 0;
+    viewInfo.subresourceRange.levelCount = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount = 1;
+
+    vk::ImageView imageView;
+    if (logicalDevice.createImageView(&viewInfo, nullptr, &imageView) != vk::Result::eSuccess) {
+        if(error_queue)
+            error_queue->push_back("failed to create texture image view");
+    }
+
+    return imageView;
 }
 
 e172vp::SwapChain::SwapChain() {

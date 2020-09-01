@@ -40,12 +40,10 @@ class Renderer {
     e172vp::DescriptorSetLayout objectDescriptorSetLayout;
     e172vp::DescriptorSetLayout samplerDescriptorSetLayout;
 
-    vk::ImageView aCharImageView;
 
     std::vector<vk::Buffer> uniformBuffers;
     std::vector<vk::DeviceMemory> uniformBuffersMemory;
     std::vector<vk::DescriptorSet> uniformDescriptorSets;
-
 
     Font *font = nullptr;
 
@@ -58,16 +56,14 @@ class Renderer {
 public:
     static std::vector<std::string> glfwExtensions();
 
-    static void proceedCommandBuffers(
-            const vk::RenderPass &renderPass,
+    static void proceedCommandBuffers(const vk::RenderPass &renderPass,
             const vk::Pipeline &pipeline,
             const vk::PipelineLayout &pipelineLayout,
             const vk::Extent2D &extent,
             const std::vector<vk::Framebuffer> &swapChainFramebuffers,
             const std::vector<vk::CommandBuffer> &commandBuffers,
             const std::vector<vk::DescriptorSet> &uniformDescriptorSets,
-            const std::list<VertexObject *> &vertexObjects
-            );
+            const std::list<VertexObject *> &vertexObjects);
 
     static void resetCommandBuffers(const std::vector<vk::CommandBuffer> &commandBuffers, const vk::Queue &graphicsQueue, const vk::Queue &presentQueue);
     static void createSyncObjects(const vk::Device &logicDevice, vk::Semaphore *imageAvailableSemaphore, vk::Semaphore *renderFinishedSemaphore);
@@ -75,6 +71,8 @@ public:
     static std::vector<char> readFile(const std::string &filename);
 
     VertexObject *addVertexObject(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
+    VertexObject *addCharacter(char c);
+
     VertexObject *addVertexObject(const Mesh &mesh);
     bool removeVertexObject(VertexObject *vertexObject);
     Renderer();

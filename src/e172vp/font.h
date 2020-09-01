@@ -1,8 +1,6 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <ft2build.h>
-#include <freetype/freetype.h>
 #include <glm/glm.hpp>
 #include <string>
 #include <map>
@@ -11,20 +9,29 @@
 namespace e172vp {
 
 class Font {
-    static inline FT_Library ft;
-    static inline bool libraryInitialized = false;
 
-    FT_Face face;
+    vk::Device m_logicalDevice;
 
 
-    struct Character {
-        vk::Image image;
-        vk::DeviceMemory imageMemory;
-        vk::Format imageFormat;
+    class Character {
+        friend Font;
+        vk::DeviceMemory m_imageMemory;
+        vk::Image m_image;
+        vk::ImageView m_imageView;
+        vk::Format m_imageFormat;
 
-        glm::ivec2   size;       // Size of glyph
-        glm::ivec2   bearing;    // Offset from baseline to left/top of glyph
-        unsigned int advance;    // Offset to advance to next glyph
+        glm::ivec2 m_size;
+        glm::ivec2 m_bearing;
+        unsigned int m_advance;
+        bool m_isValid = false;
+    public:
+        vk::Image image() const;
+        vk::ImageView imageView() const;
+        vk::Format imageFormat() const;
+        glm::ivec2 size() const;
+        glm::ivec2 bearing() const;
+        unsigned int advance() const;
+        bool isValid() const;
     };
 
     std::map<char, Character> characters;
@@ -36,11 +43,13 @@ public:
     static vk::CommandBuffer beginSingleTimeCommands(const vk::Device &logicalDevice, const vk::CommandPool &commandPool);
     static void endSingleTimeCommands(const vk::Device &logicalDevice, const vk::CommandPool &commandPool, const vk::Queue &queue, vk::CommandBuffer commandBuffer);
     static void copyBufferToImage(const vk::Device &logicalDevice, const vk::CommandPool &commandPool, const vk::Queue &queue, vk::Buffer buffer, vk::Image image, uint32_t width, uint32_t height);
-    static vk::ImageView createImageView(const vk::Device &logicalDevice, vk::Image image, vk::Format format);
 
+    Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, const std::string &path, size_t size);
 
-    Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, const std::string &path);
+    Font(const Font&) = delete;
+    Font& operator=(const Font&) = delete;
 
+    ~Font();
 
     Character character(char c) const;
 };

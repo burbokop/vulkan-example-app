@@ -6,11 +6,12 @@
 bool e172vp::Hardware::isDeviceSuitable(vk::PhysicalDevice physicalDevice, vk::SurfaceKHR surface, const std::vector<std::string> &requiredDeviceExtensions) {
     const auto missing = StringVector::subtract(requiredDeviceExtensions, Extension::presentDeviceExtensions(physicalDevice));
     bool swapChainAdequate = false;
+    const auto features = physicalDevice.getFeatures();
     if (missing.size() == 0) {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice, surface);
         swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
     }
-    return swapChainAdequate && missing.size() == 0;
+    return swapChainAdequate && missing.size() == 0 && features.samplerAnisotropy;
 }
 
 e172vp::Hardware::SwapChainSupportDetails e172vp::Hardware::querySwapChainSupport(const vk::PhysicalDevice &physicalDevice, vk::SurfaceKHR surface) {

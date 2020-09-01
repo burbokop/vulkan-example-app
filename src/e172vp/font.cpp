@@ -1,8 +1,13 @@
 #include "font.h"
+#include "swapchain.h"
 
 #include <iostream>
 #include "tools/buffer.h"
 #include <thread>
+#include <ft2build.h>
+#include <freetype/freetype.h>
+
+
 
 bool e172vp::Font::createTextureImage32(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, void* pixels, size_t w, size_t h, vk::Format format, vk::Image *image, vk::DeviceMemory *imageMemory) {
     int channelCount = 0;
@@ -10,6 +15,8 @@ bool e172vp::Font::createTextureImage32(const vk::Device &logicalDevice, const v
         channelCount = 3;
     } else if(format == vk::Format::eR8G8B8A8Srgb) {
         channelCount = 4;
+    } else if(format == vk::Format::eR8Srgb) {
+        channelCount = 1;
     } else {
         std::cerr << "unsupported image format\n";
         return false;
@@ -169,21 +176,24 @@ void e172vp::Font::copyBufferToImage(const vk::Device &logicalDevice, const vk::
     endSingleTimeCommands(logicalDevice, commandPool, queue, commandBuffer);
 }
 
-e172vp::Font::Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, const std::string &path) {
-    if(!libraryInitialized) {
-        if (FT_Init_FreeType(&ft)) {
-            std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-            return;
-        }
-        libraryInitialized = true;
+e172vp::Font::Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, const std::string &path, size_t size) {
+    m_logicalDevice = logicalDevice;
+
+    FT_Library ft;
+    if (FT_Init_FreeType(&ft)) {
+        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        return;
     }
 
+    FT_Face face;
     if (FT_New_Face(ft, path.c_str(), 0, &face)) {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
         return;
     }
 
-    FT_Set_Pixel_Sizes(face, 0, 12);
+    FT_Set_Pixel_Sizes(face, 0, size);
+
+
 
     for (unsigned char c = 0; c < 128; c++)
     {
@@ -193,19 +203,67 @@ e172vp::Font::Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &ph
         }
 
         Character character;
+
+
+        //face->glyph->subglyphs
+
+        std::string f = {
+            static_cast<char>(face->glyph->format >> 24),
+            static_cast<char>(face->glyph->format >> 16),
+            static_cast<char>(face->glyph->format >> 8),
+            static_cast<char>(face->glyph->format >> 0)
+        };
+
+
+
+
+
+
         if(face->glyph->bitmap.width > 0 && face->glyph->bitmap.rows > 0) {
-            if(!createTextureImage32(logicalDevice, physicalDevice, commandPool, copyQueue, face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, vk::Format::eR8G8B8A8Srgb, &character.image, &character.imageMemory))
+            character.m_imageFormat = vk::Format::eR8G8B8A8Srgb;
+
+            uint32_t rgba_buffer[face->glyph->bitmap.rows * face->glyph->bitmap.width];
+            auto p = reinterpret_cast<uint8_t*>(face->glyph->bitmap.buffer);
+            for(size_t y = 0; y < face->glyph->bitmap.rows; ++y) {
+                for(size_t x = 0; x < face->glyph->bitmap.width; ++x) {
+                    uint8_t c = p[x + y * face->glyph->bitmap.width];
+
+                    uint32_t c32 = static_cast<uint32_t>(c);
+                    uint32_t color = 0xff0088ff;
+                    uint32_t gray = color & c32;
+
+                    rgba_buffer[x + y * face->glyph->bitmap.width] = gray;
+                }
+            }
+
+            if(!createTextureImage32(logicalDevice, physicalDevice, commandPool, copyQueue, &rgba_buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, character.m_imageFormat, &character.m_image, &character.m_imageMemory))
                 break;
+
+            character.m_imageView = SwapChain::createImageView(logicalDevice, character.m_image, character.m_imageFormat);
+            character.m_size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+            character.m_bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
+            character.m_advance = face->glyph->advance.x;
+            character.m_isValid = true;
+
+            characters.insert(std::pair<char, Character>(c, character));
         }
 
-        character.imageFormat = vk::Format::eR8G8B8A8Srgb;
-        character.size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
-        character.bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
-        character.advance = face->glyph->advance.x;
-
-        characters.insert(std::pair<char, Character>(c, character));
     }
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
+}
 
+e172vp::Font::~Font() {
+    if(m_logicalDevice) {
+        for(auto c : characters) {
+            if(c.second.m_imageView)
+                m_logicalDevice.destroyImageView(c.second.m_imageView);
+            if(c.second.m_image)
+                m_logicalDevice.destroyImage(c.second.m_image);
+            if(c.second.m_imageMemory)
+                m_logicalDevice.freeMemory(c.second.m_imageMemory);
+        }
+    }
 }
 
 e172vp::Font::Character e172vp::Font::character(char c) const {
@@ -213,22 +271,10 @@ e172vp::Font::Character e172vp::Font::character(char c) const {
 }
 
 
-vk::ImageView e172vp::Font::createImageView(const vk::Device &logicalDevice, vk::Image image, vk::Format format) {
-    vk::ImageViewCreateInfo viewInfo;
-    viewInfo.image = image;
-    viewInfo.viewType = vk::ImageViewType::e2D;
-    viewInfo.format = format;
-    viewInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
-    viewInfo.subresourceRange.baseMipLevel = 0;
-    viewInfo.subresourceRange.levelCount = 1;
-    viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount = 1;
-
-    vk::ImageView imageView;
-    if (logicalDevice.createImageView(&viewInfo, nullptr, &imageView) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to create texture image view!");
-    }
-
-    return imageView;
-}
-
+vk::Image e172vp::Font::Character::image() const { return m_image; }
+vk::ImageView e172vp::Font::Character::imageView() const { return m_imageView; }
+vk::Format e172vp::Font::Character::imageFormat() const { return m_imageFormat; }
+glm::ivec2 e172vp::Font::Character::size() const { return m_size; }
+glm::ivec2 e172vp::Font::Character::bearing() const { return m_bearing; }
+unsigned int e172vp::Font::Character::advance() const { return m_advance; }
+bool e172vp::Font::Character::isValid() const { return m_isValid; }

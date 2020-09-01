@@ -29,5 +29,7 @@ void main() {
 
     	fragColor = inColor * mod(random(inPosition), 1.);
 
+	//fragColor = vec3(inTexCoord, 0);
+
 	fragTexCoord = inTexCoord;
 }

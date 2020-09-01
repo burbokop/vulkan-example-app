@@ -41,6 +41,8 @@ int main() {
 
         ship0->setRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
         cube->setRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.5f, 0.5f, 0.0f)));
+        plate->setScale(glm::scale(glm::mat4(1.), glm::vec3(std::sin(time))));
+
 
         renderer.applyPresentation();
     }

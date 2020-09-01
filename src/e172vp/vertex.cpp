@@ -1,8 +1,8 @@
 #include "vertex.h"
 
 
-std::array<vk::VertexInputAttributeDescription, 2> e172vp::Vertex::attributeDescriptions() {
-    std::array<vk::VertexInputAttributeDescription, 2> attributeDescriptions{};
+std::array<vk::VertexInputAttributeDescription, 3> e172vp::Vertex::attributeDescriptions() {
+    std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions{};
 
     attributeDescriptions[0].binding = 0;
     attributeDescriptions[0].location = 0;
