@@ -11,11 +11,12 @@ int main() {
 
     const auto shipMash = e172vp::Mesh::load("../models/ship.obj");
     const auto cubeMash = e172vp::Mesh::load("../models/cube.obj");
+    const auto ship2Mash = e172vp::Mesh::load("../models/ship2.obj");
 
 
     auto plate = renderer.addVertexObject(Resources::vertices("plate"), Resources::indices("plate"));
 
-    auto ship0 = renderer.addVertexObject(Resources::vertices(""), Resources::indices(""));
+    auto ship0 = renderer.addVertexObject(ship2Mash);
     auto ship1 = renderer.addVertexObject(shipMash);
     auto cube = renderer.addVertexObject(cubeMash);
 
@@ -39,7 +40,7 @@ int main() {
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 
-        ship0->setRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+        ship0->setRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
         cube->setRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.5f, 0.5f, 0.0f)));
         plate->setScale(glm::scale(glm::mat4(1.), glm::vec3(std::sin(time))));
 
