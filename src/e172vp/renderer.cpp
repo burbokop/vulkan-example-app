@@ -9,6 +9,9 @@
 #include "tools/buffer.h"
 
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../image/stb_image.h"
+
 e172vp::Renderer::Renderer() {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -42,8 +45,11 @@ e172vp::Renderer::Renderer() {
         std::cerr << StringVector::toString(errors) << "\n";
 
 
-    globalDescriptorSetLayout = DescriptorSetLayout::create(m_graphicsObject.logicalDevice(), 0);
-    objectDescriptorSetLayout = DescriptorSetLayout::create(m_graphicsObject.logicalDevice(), 1);
+    globalDescriptorSetLayout = DescriptorSetLayout::createUniformDSL(m_graphicsObject.logicalDevice(), 0);
+    objectDescriptorSetLayout = DescriptorSetLayout::createUniformDSL(m_graphicsObject.logicalDevice(), 1);
+    samplerDescriptorSetLayout = DescriptorSetLayout::createSamplerDSL(m_graphicsObject.logicalDevice(), 2);
+
+
     Buffer::createUniformBuffers<GlobalUniformBufferObject>(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &uniformBuffers, &uniformBuffersMemory);
     Buffer::createUniformDescriptorSets<GlobalUniformBufferObject>(m_graphicsObject.logicalDevice(), m_graphicsObject.descriptorPool(), uniformBuffers, &globalDescriptorSetLayout, &uniformDescriptorSets);
 
@@ -57,16 +63,32 @@ e172vp::Renderer::Renderer() {
     std::vector<char> fragShaderCode = readFile("../shaders/frag.spv");
 
 
-    pipeline = new Pipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), { globalDescriptorSetLayout.descriptorSetLayoutHandle(), objectDescriptorSetLayout.descriptorSetLayoutHandle() }, vertShaderCode, fragShaderCode, vk::PrimitiveTopology::eTriangleList);
+    pipeline = new Pipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), { globalDescriptorSetLayout.descriptorSetLayoutHandle(), objectDescriptorSetLayout.descriptorSetLayoutHandle(), samplerDescriptorSetLayout.descriptorSetLayoutHandle() }, vertShaderCode, fragShaderCode, vk::PrimitiveTopology::eTriangleList);
 
-    //createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), { globalDescriptorSetLayout.descriptorSetLayoutHandle(), objectDescriptorSetLayout.descriptorSetLayoutHandle() }, &pipeline.pipelineLayout(), &graphicsPipeline);
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
 
 
     font = new Font(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), "../fonts/ZCOOL.ttf");
 
+    auto AChar = font->character('B');
 
 
+    int texWidth, texHeight, texChannels;
+    stbi_uc* pixels = stbi_load("../image/image.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+
+    if (!pixels) {
+        throw std::runtime_error("failed to load texture image!");
+    }
+
+    std::cout << "image channels: " << texChannels << "\n";
+
+
+    vk::Image iii;
+    vk::DeviceMemory iii_dm;
+    Font::createTextureImage32(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), pixels, texWidth, texHeight, vk::Format::eR8G8B8Srgb, &iii, &iii_dm);
+    stbi_image_free(pixels);
+
+    aCharImageView = Font::createImageView(m_graphicsObject.logicalDevice(), iii, AChar.imageFormat);
 
     elapsedFromStart.reset();
 }
@@ -192,7 +214,7 @@ void e172vp::Renderer::proceedCommandBuffers(const vk::RenderPass &renderPass, c
             commandBuffers[i].bindIndexBuffer(object->indexBuffer(), 0, vk::IndexType::eUint32);
 
             //commandBuffers[i].bind
-            commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, { uniformDescriptorSets[i], object->descriptorSets()[i] }, {});
+            commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, { uniformDescriptorSets[i], object->descriptorSets()[i], object->textureDescriptorSets()[i] }, {});
             commandBuffers[i].drawIndexed(object->indexCount(), 1, 0, 0, 0);
         }
 
@@ -230,13 +252,13 @@ std::vector<char> e172vp::Renderer::readFile(const std::string &filename) {
 }
 
 e172vp::VertexObject *e172vp::Renderer::addVertexObject(const std::vector<e172vp::Vertex> &vertices, const std::vector<uint32_t> &indices) {
-    const auto r = new VertexObject(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectDescriptorSetLayout, vertices, indices);
+    const auto r = new VertexObject(&m_graphicsObject, m_graphicsObject.swapChain().imageCount(), &objectDescriptorSetLayout, &samplerDescriptorSetLayout, vertices, indices, aCharImageView);
     vertexObjects.push_back(r);
     return r;
 }
 
 e172vp::VertexObject *e172vp::Renderer::addVertexObject(const e172vp::Mesh &mesh) {
-    return addVertexObject(Vertex::fromGlm(mesh.vertices, glm::vec3 { 1, 1, 1 }), mesh.vertexIndices);
+    return addVertexObject(Vertex::fromGlm(mesh.vertices, mesh.uvMap), mesh.vertexIndices);
 }
 
 bool e172vp::Renderer::removeVertexObject(e172vp::VertexObject *vertexObject) {

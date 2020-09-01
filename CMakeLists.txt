@@ -53,6 +53,8 @@ add_executable(vulkan-app
 
     src/main.cpp
     src/resources.cpp
+
+    image/stb_image.h
 )
 
 

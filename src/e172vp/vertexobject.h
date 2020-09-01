@@ -35,9 +35,10 @@ class VertexObject {
     std::vector<vk::DeviceMemory> m_uniformBufferMemories;
 
     std::vector<vk::DescriptorSet> m_descriptorSets;
+    std::vector<vk::DescriptorSet> m_textureDescriptorSets;
     uint32_t m_indexCount;
     ~VertexObject();
-    VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const e172vp::DescriptorSetLayout *descriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
+    VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const DescriptorSetLayout *samplerDescriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const vk::ImageView &imageView);
 public:
     GraphicsObject *graphicsObject() const;
     std::vector<vk::DescriptorSet> descriptorSets() const;
@@ -52,6 +53,7 @@ public:
     void setTranslation(const glm::mat4 &translation);
     glm::mat4 scale() const;
     void setScale(const glm::mat4 &scale);
+    std::vector<vk::DescriptorSet> textureDescriptorSets() const;
 };
 }
 #endif // VERTEXOBJECT_H

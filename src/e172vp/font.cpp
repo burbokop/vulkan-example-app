@@ -4,33 +4,29 @@
 #include "tools/buffer.h"
 #include <thread>
 
-void e172vp::Font::createTextureImage32(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, void* pixels, size_t w, size_t h, vk::Image *image, vk::DeviceMemory *imageMemory) {
-    VkDeviceSize imageSize = w * h * 4;
-    static int debugSizeSum = 0;
-    static int debugIteration = 0;
-    debugIteration++;
-    debugSizeSum += imageSize;
-
-    std::cout << "dss: " << debugIteration << " : " << debugSizeSum << " : heaps:" <<  "\n";
-
-    vk::PhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
-    physicalDevice.getMemoryProperties(&physicalDeviceMemoryProperties);
-    for(size_t i = 0; i < physicalDeviceMemoryProperties.memoryHeapCount; ++i) {
-        std::cout << "\theap " << i << ": " <<  physicalDeviceMemoryProperties.memoryHeaps[i].size / 1024 / 1024 << " mb\n";
+bool e172vp::Font::createTextureImage32(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, const vk::CommandPool &commandPool, const vk::Queue &copyQueue, void* pixels, size_t w, size_t h, vk::Format format, vk::Image *image, vk::DeviceMemory *imageMemory) {
+    int channelCount = 0;
+    if(format == vk::Format::eR8G8B8Srgb) {
+        channelCount = 3;
+    } else if(format == vk::Format::eR8G8B8A8Srgb) {
+        channelCount = 4;
+    } else {
+        std::cerr << "unsupported image format\n";
+        return false;
     }
-
+    VkDeviceSize imageSize = w * h * channelCount;
 
     vk::Buffer stagingBuffer;
     vk::DeviceMemory stagingBufferMemory;
-    Buffer::createAbstractBuffer(logicalDevice, physicalDevice, imageSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, &stagingBuffer, &stagingBufferMemory);
+    if(!Buffer::createAbstractBuffer(logicalDevice, physicalDevice, imageSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, &stagingBuffer, &stagingBufferMemory))
+        return false;
 
     void* data;
     vkMapMemory(logicalDevice, stagingBufferMemory, 0, imageSize, 0, &data);
     memcpy(data, pixels, static_cast<size_t>(imageSize));
     vkUnmapMemory(logicalDevice, stagingBufferMemory);
 
-
-    createImage(logicalDevice, physicalDevice, w, h, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, image, imageMemory);
+    createImage(logicalDevice, physicalDevice, w, h, format, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, image, imageMemory);
 
     transitionImageLayout(logicalDevice, commandPool, copyQueue, *image, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
     copyBufferToImage(logicalDevice, commandPool, copyQueue, stagingBuffer, *image, static_cast<uint32_t>(w), static_cast<uint32_t>(h));
@@ -38,6 +34,7 @@ void e172vp::Font::createTextureImage32(const vk::Device &logicalDevice, const v
 
     logicalDevice.destroyBuffer(stagingBuffer);
     logicalDevice.freeMemory(stagingBufferMemory);
+    return true;
 }
 
 void e172vp::Font::createImage(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, uint32_t width, uint32_t height, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image *image, vk::DeviceMemory *imageMemory) {
@@ -190,17 +187,18 @@ e172vp::Font::Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &ph
 
     for (unsigned char c = 0; c < 128; c++)
     {
-//        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        // load character glyph
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
             continue;
         }
-        // generate texture
 
         Character character;
-        createTextureImage32(logicalDevice, physicalDevice, commandPool, copyQueue, face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, &character.image, &character.imageMemory);
+        if(face->glyph->bitmap.width > 0 && face->glyph->bitmap.rows > 0) {
+            if(!createTextureImage32(logicalDevice, physicalDevice, commandPool, copyQueue, face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, vk::Format::eR8G8B8A8Srgb, &character.image, &character.imageMemory))
+                break;
+        }
+
+        character.imageFormat = vk::Format::eR8G8B8A8Srgb;
         character.size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
         character.bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
         character.advance = face->glyph->advance.x;
@@ -209,3 +207,28 @@ e172vp::Font::Font(const vk::Device &logicalDevice, const vk::PhysicalDevice &ph
     }
 
 }
+
+e172vp::Font::Character e172vp::Font::character(char c) const {
+    return characters.at(c);
+}
+
+
+vk::ImageView e172vp::Font::createImageView(const vk::Device &logicalDevice, vk::Image image, vk::Format format) {
+    vk::ImageViewCreateInfo viewInfo;
+    viewInfo.image = image;
+    viewInfo.viewType = vk::ImageViewType::e2D;
+    viewInfo.format = format;
+    viewInfo.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
+    viewInfo.subresourceRange.baseMipLevel = 0;
+    viewInfo.subresourceRange.levelCount = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount = 1;
+
+    vk::ImageView imageView;
+    if (logicalDevice.createImageView(&viewInfo, nullptr, &imageView) != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to create texture image view!");
+    }
+
+    return imageView;
+}
+

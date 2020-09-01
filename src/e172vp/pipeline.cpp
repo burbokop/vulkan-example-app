@@ -120,7 +120,9 @@ e172vp::Pipeline::Pipeline(const vk::Device &logicalDevice, const vk::Extent2D &
 
     vk::PipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.pushConstantRangeCount = 0;
-    pipelineLayoutInfo.setSetLayouts(descriptorSetLayouts);
+
+    pipelineLayoutInfo.setLayoutCount = descriptorSetLayouts.size();
+    pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
 
     if (logicalDevice.createPipelineLayout(&pipelineLayoutInfo, nullptr, &m_pipelineLayout) != vk::Result::eSuccess) {
         throw std::runtime_error("failed to create pipeline layout!");

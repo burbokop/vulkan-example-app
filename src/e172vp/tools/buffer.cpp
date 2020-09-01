@@ -2,6 +2,8 @@
 
 #include "../graphicsobject.h"
 
+#include <iostream>
+
 vk::Device e172vp::Buffer::logicalDevice(const e172vp::GraphicsObject *graphicsObject) {
     return graphicsObject->logicalDevice();
 }
@@ -21,20 +23,26 @@ uint32_t e172vp::Buffer::findMemoryType(const vk::PhysicalDevice &physicalDevice
     throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void e172vp::Buffer::createAbstractBuffer(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer *buffer, vk::DeviceMemory *bufferMemory) {
+bool e172vp::Buffer::createAbstractBuffer(const vk::Device &logicalDevice, const vk::PhysicalDevice &physicalDevice, vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer *buffer, vk::DeviceMemory *bufferMemory) {
+    if(size <= 0) {
+        std::cerr << "e172vp::Buffer::createAbstractBuffer: failed to create buffer with size 0.\n";
+        return false;
+    }
+
     vk::BufferCreateInfo bufferInfo;
     bufferInfo.size = size;
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = vk::SharingMode::eExclusive;
 
     if (logicalDevice.createBuffer(&bufferInfo, nullptr, buffer) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to create buffer!");
+        std::cerr << "failed to create buffer!\n";
+        return false;
     }
 
     vk::MemoryRequirements memRequirements;
     logicalDevice.getBufferMemoryRequirements(*buffer, &memRequirements);
 
-    vk::MemoryAllocateInfo allocInfo{};
+    vk::MemoryAllocateInfo allocInfo;
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
 
@@ -42,10 +50,12 @@ void e172vp::Buffer::createAbstractBuffer(const vk::Device &logicalDevice, const
 
     const auto code = logicalDevice.allocateMemory(&allocInfo, nullptr, bufferMemory);
     if (code != vk::Result::eSuccess) {
-        throw std::runtime_error("e172vp::Buffer::createAbstractBuffer: failed to allocate buffer memory: " + vk::to_string(code));
+        std::cerr << "e172vp::Buffer::createAbstractBuffer: failed to allocate buffer memory: " << vk::to_string(code) << "\n";
+        return false;
     }
 
-    vkBindBufferMemory(logicalDevice, *buffer, *bufferMemory, 0);
+    logicalDevice.bindBufferMemory(*buffer, *bufferMemory, 0);
+    return true;
 }
 
 void e172vp::Buffer::copyBuffer(const vk::Device &logicalDevice, const vk::CommandPool &commandPool, const vk::Queue &graphicsQueue, const vk::Buffer &srcBuffer, const vk::Buffer &dstBuffer, const vk::DeviceSize &size) {
@@ -160,6 +170,38 @@ void e172vp::Buffer::createUniformDescriptorSets(const vk::Device &logicalDevice
         descriptorWrite.descriptorType = descriptorType;
         descriptorWrite.descriptorCount = 1;
         descriptorWrite.pBufferInfo = &bufferInfo;
+
+        logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+    }
+}
+
+void e172vp::Buffer::createSamplerDescriptorSets(const vk::Device &logicalDevice, const vk::DescriptorPool &descriptorPool, const vk::ImageView &imageView, const vk::Sampler &sampler, size_t count, const e172vp::DescriptorSetLayout *descriptorSetLayout, std::vector<vk::DescriptorSet> *descriptorSets) {
+    std::vector<vk::DescriptorSetLayout> layouts(count, descriptorSetLayout->descriptorSetLayoutHandle());
+    vk::DescriptorSetAllocateInfo allocInfo;
+    allocInfo.descriptorPool = descriptorPool;
+    allocInfo.descriptorSetCount = static_cast<uint32_t>(count);
+    allocInfo.pSetLayouts = layouts.data();
+
+    descriptorSets->resize(count);
+
+    const auto code = logicalDevice.allocateDescriptorSets(&allocInfo, descriptorSets->data());
+    if (code != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to allocate descriptor sets: " + vk::to_string(code));
+    }
+
+    for (size_t i = 0; i < count; i++) {
+        vk::DescriptorImageInfo imageInfo;
+        imageInfo.imageLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
+        imageInfo.imageView = imageView;
+        imageInfo.sampler = sampler;
+
+        vk::WriteDescriptorSet descriptorWrite;
+        descriptorWrite.dstSet = descriptorSets->at(i);
+        descriptorWrite.dstBinding = descriptorSetLayout->binding();
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = vk::DescriptorType::eCombinedImageSampler;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pImageInfo = &imageInfo;
 
         logicalDevice.updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
     }

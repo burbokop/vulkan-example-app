@@ -11,7 +11,8 @@ class DescriptorSetLayout {
     uint32_t m_binding = -1;
     bool m_isValid = false;
 public:
-    static DescriptorSetLayout create(const vk::Device &logicalDevice, uint32_t binding);
+    static DescriptorSetLayout createUniformDSL(const vk::Device &logicalDevice, uint32_t binding);
+    static DescriptorSetLayout createSamplerDSL(const vk::Device &logicalDevice, uint32_t binding);
     static void destroy(const DescriptorSetLayout &descriptorSetLayout);
 
     DescriptorSetLayout() {}

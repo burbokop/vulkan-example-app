@@ -38,6 +38,9 @@ class Renderer {
 
     e172vp::DescriptorSetLayout globalDescriptorSetLayout;
     e172vp::DescriptorSetLayout objectDescriptorSetLayout;
+    e172vp::DescriptorSetLayout samplerDescriptorSetLayout;
+
+    vk::ImageView aCharImageView;
 
     std::vector<vk::Buffer> uniformBuffers;
     std::vector<vk::DeviceMemory> uniformBuffersMemory;

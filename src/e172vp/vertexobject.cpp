@@ -7,15 +7,14 @@ std::vector<vk::DescriptorSet> e172vp::VertexObject::descriptorSets() const {
     return m_descriptorSets;
 }
 
-e172vp::VertexObject::VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices) {
+e172vp::VertexObject::VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const DescriptorSetLayout *samplerDescriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const vk::ImageView &imageView) {
+    m_graphicsObject = const_cast<GraphicsObject*>(graphicsObject);
     Buffer::createVertexBuffer(graphicsObject, vertices, &m_vertexBuffer, &m_vertexBufferMemory);
     Buffer::createIndexBuffer(graphicsObject, indices, &m_indexBuffer, &m_indexBufferMemory);
     Buffer::createUniformBuffers<ubo>(graphicsObject, imageCount, &m_uniformBuffers, &m_uniformBufferMemories);
     Buffer::createUniformDescriptorSets<ubo>(graphicsObject->logicalDevice(), graphicsObject->descriptorPool(), m_uniformBuffers, descriptorSetLayout, &m_descriptorSets);
-    m_graphicsObject = const_cast<GraphicsObject*>(graphicsObject);
+    Buffer::createSamplerDescriptorSets(graphicsObject->logicalDevice(), graphicsObject->descriptorPool(), imageView, graphicsObject->sampler(), imageCount, samplerDescriptorSetLayout, &m_textureDescriptorSets);
     m_indexCount = indices.size();
-
-
 }
 
 e172vp::GraphicsObject *e172vp::VertexObject::graphicsObject() const {
@@ -72,6 +71,11 @@ glm::mat4 e172vp::VertexObject::scale() const
 void e172vp::VertexObject::setScale(const glm::mat4 &scale)
 {
     m_scale = scale;
+}
+
+std::vector<vk::DescriptorSet> e172vp::VertexObject::textureDescriptorSets() const
+{
+    return m_textureDescriptorSets;
 }
 
 e172vp::VertexObject::~VertexObject() {

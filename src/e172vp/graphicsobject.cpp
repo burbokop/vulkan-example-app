@@ -35,6 +35,30 @@ vk::DescriptorPool e172vp::GraphicsObject::descriptorPool() const {
     return m_descriptorPool;
 }
 
+vk::Sampler e172vp::GraphicsObject::sampler() const {
+    return m_sampler;
+}
+
+void e172vp::GraphicsObject::createTextureSampler(const vk::Device &logicalDevice, vk::Sampler *sampler) {
+    vk::SamplerCreateInfo samplerInfo;
+    samplerInfo.magFilter = vk::Filter::eLinear;
+    samplerInfo.minFilter = vk::Filter::eLinear;
+    samplerInfo.addressModeU = vk::SamplerAddressMode::eRepeat;
+    samplerInfo.addressModeV = vk::SamplerAddressMode::eRepeat;
+    samplerInfo.addressModeW = vk::SamplerAddressMode::eRepeat;
+    samplerInfo.anisotropyEnable = true;
+    samplerInfo.maxAnisotropy = 16.0f;
+    samplerInfo.borderColor = vk::BorderColor::eIntOpaqueBlack;
+    samplerInfo.unnormalizedCoordinates = false;
+    samplerInfo.compareEnable = false;
+    samplerInfo.compareOp = vk::CompareOp::eAlways;
+    samplerInfo.mipmapMode = vk::SamplerMipmapMode::eLinear;
+
+    if (logicalDevice.createSampler(&samplerInfo, nullptr, sampler) != vk::Result::eSuccess) {
+        throw std::runtime_error("failed to create texture sampler!");
+    }
+}
+
 void e172vp::GraphicsObject::createDescriptorPool(const vk::Device &logicalDevice, size_t size, vk::DescriptorPool *uniformDescriptorPool, std::vector<std::string> *m_errors) {
     vk::DescriptorPoolSize poolSize;
     poolSize.type = vk::DescriptorType::eUniformBuffer;
@@ -99,6 +123,7 @@ e172vp::GraphicsObject::GraphicsObject(const GraphicsObjectCreateInfo &createInf
     m_commandPool = e172vp::CommandPool(m_logicalDevice, m_queueFamilies, m_swapChain.imageCount());
 
     createDescriptorPool(m_logicalDevice, createInfo.descriptorPoolSize(), &m_descriptorPool, &m_errors);
+    createTextureSampler(m_logicalDevice, &m_sampler);
 
     m_isValid = m_swapChain.isValid() && m_renderPass.isValid() && m_commandPool.isValid();
 
