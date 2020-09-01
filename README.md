@@ -18,6 +18,9 @@ https://vulkan.lunarg.com
 
 ubuntu: `sudo apt-get install mesa-vulkan-drivers`
 
+### Free Type
+
+ubuntu: `sudo apt-get install libfreetype6 libfreetype6-dev`
 
 
 # vkQueueSubmit crash
