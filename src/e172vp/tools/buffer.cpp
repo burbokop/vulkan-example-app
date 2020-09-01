@@ -38,8 +38,11 @@ void e172vp::Buffer::createAbstractBuffer(const vk::Device &logicalDevice, const
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
 
-    if (logicalDevice.allocateMemory(&allocInfo, nullptr, bufferMemory) != vk::Result::eSuccess) {
-        throw std::runtime_error("failed to allocate buffer memory!");
+
+
+    const auto code = logicalDevice.allocateMemory(&allocInfo, nullptr, bufferMemory);
+    if (code != vk::Result::eSuccess) {
+        throw std::runtime_error("e172vp::Buffer::createAbstractBuffer: failed to allocate buffer memory: " + vk::to_string(code));
     }
 
     vkBindBufferMemory(logicalDevice, *buffer, *bufferMemory, 0);

@@ -6,6 +6,7 @@
 #include <chrono>
 #include "e172vp/tools/mesh.h"
 
+
 int main() {
     e172vp::Renderer renderer;
 

@@ -48,6 +48,8 @@ add_executable(vulkan-app
     src/e172vp/tools/mesh.h
     src/e172vp/pipeline.cpp
     src/e172vp/pipeline.h
+    src/e172vp/font.cpp
+    src/e172vp/font.h
 
     src/main.cpp
     src/resources.cpp
@@ -62,5 +64,7 @@ find_package(glfw3 REQUIRED)
 target_link_libraries(vulkan-app PRIVATE
     Vulkan::Vulkan
     glfw
+    freetype
     )
 
+target_include_directories(vulkan-app PUBLIC $<BUILD_INTERFACE:/usr/include/freetype2>)

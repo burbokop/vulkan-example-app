@@ -20,7 +20,7 @@ e172vp::Renderer::Renderer() {
     createInfo.setApplicationName("test-app");
     createInfo.setApplicationVersion(1);
     createInfo.setDebugEnabled(true);
-    createInfo.setRequiredDeviceExtensions({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+    createInfo.setRequiredDeviceExtensions({ VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_EXT_memory_budget" });
     createInfo.setSurfaceCreator([this](vk::Instance i, vk::SurfaceKHR *s) {
         VkSurfaceKHR ss;
         if(glfwCreateWindowSurface(i, m_window, NULL, &ss) != VK_SUCCESS) {
@@ -61,6 +61,11 @@ e172vp::Renderer::Renderer() {
 
     //createGraphicsPipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), { globalDescriptorSetLayout.descriptorSetLayoutHandle(), objectDescriptorSetLayout.descriptorSetLayoutHandle() }, &pipeline.pipelineLayout(), &graphicsPipeline);
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
+
+
+    font = new Font(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), "../fonts/ZCOOL.ttf");
+
+
 
 
     elapsedFromStart.reset();

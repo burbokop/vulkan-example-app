@@ -13,6 +13,8 @@
 #include "tools/mesh.h"
 #include "pipeline.h"
 
+#include "font.h"
+
 namespace e172vp {
 
 
@@ -41,6 +43,8 @@ class Renderer {
     std::vector<vk::DeviceMemory> uniformBuffersMemory;
     std::vector<vk::DescriptorSet> uniformDescriptorSets;
 
+
+    Font *font = nullptr;
 
     struct GlobalUniformBufferObject {
         glm::vec2 offset;
