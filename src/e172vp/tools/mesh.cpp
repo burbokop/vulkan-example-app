@@ -8,12 +8,13 @@ e172vp::Mesh::Mesh() {
 
 }
 
-e172vp::Mesh e172vp::Mesh::load(const char *path) {
+e172vp::Mesh e172vp::Mesh::load(const std::filesystem::path &path)
+{
     Mesh result;
 
-    FILE *file = fopen(path, "r");
+    FILE *file = fopen(path.c_str(), "r");
     if(file == NULL) {
-        return Mesh();
+        throw std::runtime_error("Failed to open file " + path.string() + ": " + ::strerror(errno));
     }
 
     while(true) {

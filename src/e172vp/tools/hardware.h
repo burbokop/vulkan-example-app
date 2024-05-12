@@ -1,10 +1,9 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
+#include <cstdint>
+#include <optional>
 #include <vulkan/vulkan.hpp>
-
-
-
 
 namespace e172vp {
 
@@ -16,10 +15,10 @@ struct Hardware {
     };
 
     struct QueueFamilies {
-        std::optional<uint32_t> m_graphicsFamily;
-        std::optional<uint32_t> m_presentFamily;
-        uint32_t graphicsFamily() const { return m_graphicsFamily.value(); }
-        uint32_t presentFamily() const { return m_presentFamily.value(); }
+        std::optional<std::uint32_t> m_graphicsFamily;
+        std::optional<std::uint32_t> m_presentFamily;
+        std::uint32_t graphicsFamily() const { return m_graphicsFamily.value(); }
+        std::uint32_t presentFamily() const { return m_presentFamily.value(); }
         bool isValid() const { return m_graphicsFamily.has_value() && m_presentFamily.has_value(); }
     };
 
@@ -34,5 +33,5 @@ struct Hardware {
 
 };
 
-}
+} // namespace e172vp
 #endif // HARDWARE_H

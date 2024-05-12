@@ -1,5 +1,6 @@
 #include "swapchain.h"
-
+#include <cstdint>
+#include <limits>
 
 vk::SwapchainKHR e172vp::SwapChain::swapChainHandle() const {
     return m_swapChainHandle;
@@ -70,7 +71,7 @@ vk::PresentModeKHR e172vp::SwapChain::choosePresentMode(const std::vector<vk::Pr
 }
 
 vk::Extent2D e172vp::SwapChain::chooseExtent(const vk::SurfaceCapabilitiesKHR &capabilities, const vk::Extent2D &defaultExtent) {
-    if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+    if (capabilities.currentExtent.width != std::numeric_limits<std::uint32_t>::max()) {
         return capabilities.currentExtent;
     } else {
         VkExtent2D actualExtent = defaultExtent;

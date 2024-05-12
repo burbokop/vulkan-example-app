@@ -9,10 +9,9 @@
 int main() {
     e172vp::Renderer renderer;
 
-    const auto shipMash = e172vp::Mesh::load("../models/ship.obj");
-    const auto cubeMash = e172vp::Mesh::load("../models/cube.obj");
-    const auto ship2Mash = e172vp::Mesh::load("../models/ship2.obj");
-
+    const auto shipMash = e172vp::Mesh::load("models/ship.obj");
+    const auto cubeMash = e172vp::Mesh::load("models/cube.obj");
+    const auto ship2Mash = e172vp::Mesh::load("models/ship2.obj");
 
     auto plate = renderer.addVertexObject(Resources::vertices("plate"), Resources::indices("plate"));
 

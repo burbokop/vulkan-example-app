@@ -56,18 +56,30 @@ e172vp::Renderer::Renderer() {
     bool useUniformBuffer = true;
     std::vector<char> vertShaderCode;
     if(useUniformBuffer) {
-        vertShaderCode = readFile("../shaders/vert_uniform.spv");
+        vertShaderCode = readFile("shaders/vert_uniform.vert.spv");
     } else {
-        vertShaderCode = readFile("../shaders/vert.spv");
+        vertShaderCode = readFile("shaders/shader.vert.spv");
     }
-    std::vector<char> fragShaderCode = readFile("../shaders/frag.spv");
+    std::vector<char> fragShaderCode = readFile("shaders/shader.frag.spv");
 
-
-    pipeline = new Pipeline(m_graphicsObject.logicalDevice(), m_graphicsObject.swapChainSettings().extent, m_graphicsObject.renderPass(), { globalDescriptorSetLayout.descriptorSetLayoutHandle(), objectDescriptorSetLayout.descriptorSetLayoutHandle(), samplerDescriptorSetLayout.descriptorSetLayoutHandle() }, vertShaderCode, fragShaderCode, vk::PrimitiveTopology::eTriangleList);
+    pipeline = new Pipeline(m_graphicsObject.logicalDevice(),
+                            m_graphicsObject.swapChainSettings().extent,
+                            m_graphicsObject.renderPass(),
+                            {globalDescriptorSetLayout.descriptorSetLayoutHandle(),
+                             objectDescriptorSetLayout.descriptorSetLayoutHandle(),
+                             samplerDescriptorSetLayout.descriptorSetLayoutHandle()},
+                            vertShaderCode,
+                            fragShaderCode,
+                            vk::PrimitiveTopology::eTriangleList);
 
     createSyncObjects(m_graphicsObject.logicalDevice(), &imageAvailableSemaphore, &renderFinishedSemaphore);
 
-    font = new Font(m_graphicsObject.logicalDevice(), m_graphicsObject.physicalDevice(), m_graphicsObject.commandPool(), m_graphicsObject.graphicsQueue(), "../fonts/ZCOOL.ttf", 128);
+    font = new Font(m_graphicsObject.logicalDevice(),
+                    m_graphicsObject.physicalDevice(),
+                    m_graphicsObject.commandPool(),
+                    m_graphicsObject.graphicsQueue(),
+                    "fonts/ZCOOL.ttf",
+                    128);
 
     elapsedFromStart.reset();
 }
@@ -225,7 +237,7 @@ std::vector<char> e172vp::Renderer::readFile(const std::string &filename) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
-        throw std::runtime_error("failed to open file!");
+        throw std::runtime_error("Failed to open file: " + filename);
     }
 
     size_t fileSize = (size_t) file.tellg();
