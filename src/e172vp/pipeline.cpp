@@ -1,6 +1,6 @@
 #include "pipeline.h"
 
-#include "vertex.h"
+#include "geometry/Vertex.h"
 #include <fstream>
 
 vk::Pipeline e172vp::Pipeline::handle() const {
@@ -25,7 +25,9 @@ vk::Device e172vp::Pipeline::logicalDevice() const
     return m_logicalDevice;
 }
 
-vk::ShaderModule e172vp::Pipeline::createShaderModule(const vk::Device &logicDevice, const std::vector<char> &code) {
+vk::ShaderModule e172vp::Pipeline::createShaderModule(const vk::Device& logicDevice, const std::vector<std::uint8_t>& code)
+{
+    assert(!code.empty());
     vk::ShaderModuleCreateInfo createInfo;
     createInfo.setCodeSize(code.size());
     createInfo.setPCode(reinterpret_cast<const uint32_t*>(code.data()));
@@ -38,7 +40,14 @@ vk::ShaderModule e172vp::Pipeline::createShaderModule(const vk::Device &logicDev
     return shaderModule;
 }
 
-e172vp::Pipeline::Pipeline(const vk::Device &logicalDevice, const vk::Extent2D &extent, const vk::RenderPass &renderPass, const std::vector<vk::DescriptorSetLayout> &descriptorSetLayouts, const std::vector<char> &vertexShader, const std::vector<char> &fragmentShader, vk::PrimitiveTopology topology) {
+e172vp::Pipeline::Pipeline(const vk::Device& logicalDevice,
+    const vk::Extent2D& extent,
+    const vk::RenderPass& renderPass,
+    const std::vector<vk::DescriptorSetLayout>& descriptorSetLayouts,
+    const std::vector<std::uint8_t>& vertexShader,
+    const std::vector<std::uint8_t>& fragmentShader,
+    vk::PrimitiveTopology topology)
+{
     vk::ShaderModule vertShaderModule = createShaderModule(logicalDevice, vertexShader);
     vk::ShaderModule fragShaderModule = createShaderModule(logicalDevice, fragmentShader);
 

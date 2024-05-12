@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(vulkan-app LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_definitions(__cpp_concepts=202002L)
 
 add_executable(
   vulkan-app
@@ -31,8 +32,8 @@ add_executable(
   src/e172vp/renderpass.h
   src/e172vp/commandpool.cpp
   src/e172vp/commandpool.h
-  src/e172vp/vertex.cpp
-  src/e172vp/vertex.h
+  src/e172vp/geometry/Vertex.cpp
+  src/e172vp/geometry/Vertex.h
   src/e172vp/tools/buffer.cpp
   src/e172vp/tools/buffer.h
   src/e172vp/vertexobject.cpp
@@ -43,15 +44,24 @@ add_executable(
   src/e172vp/time/time.cpp
   src/e172vp/time/elapsedtimer.h
   src/e172vp/time/elapsedtimer.cpp
-  src/e172vp/tools/mesh.cpp
-  src/e172vp/tools/mesh.h
+  src/e172vp/geometry/Mesh.cpp
+  src/e172vp/geometry/Mesh.h
   src/e172vp/pipeline.cpp
   src/e172vp/pipeline.h
   src/e172vp/font.cpp
   src/e172vp/font.h
   src/main.cpp
   src/resources.cpp
-  image/stb_image.h)
+  image/stb_image.h
+  src/e172vp/utils/NoNull.h
+  src/e172vp/tools/Model.h
+  src/e172vp/tools/Model.cpp
+  src/e172vp/geometry/ObjMesh.h
+  src/e172vp/geometry/ObjMesh.cpp
+  src/e172vp/utils/Fs.h
+  src/e172vp/utils/Fs.cpp
+  src/e172vp/utils/Error.h
+  src/e172vp/utils/Error.cpp)
 
 find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
@@ -69,6 +79,7 @@ add_shader_target(
   ${CMAKE_CURRENT_BINARY_DIR}/shaders
   SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/shaders/shader.frag
+  ${CMAKE_CURRENT_LIST_DIR}/shaders/plane.frag
   ${CMAKE_CURRENT_LIST_DIR}/shaders/shader.vert
   ${CMAKE_CURRENT_LIST_DIR}/shaders/vert_uniform.vert)
 

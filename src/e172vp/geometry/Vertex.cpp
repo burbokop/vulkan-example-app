@@ -1,7 +1,9 @@
-#include "vertex.h"
+#include "Vertex.h"
 
+namespace e172vp {
 
-std::array<vk::VertexInputAttributeDescription, 3> e172vp::Vertex::attributeDescriptions() {
+std::array<vk::VertexInputAttributeDescription, 3> Vertex::attributeDescriptions()
+{
     std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions{};
 
     attributeDescriptions[0].binding = 0;
@@ -22,19 +24,14 @@ std::array<vk::VertexInputAttributeDescription, 3> e172vp::Vertex::attributeDesc
     return attributeDescriptions;
 }
 
-std::vector<e172vp::Vertex> e172vp::Vertex::fromGlm(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &texCoords, glm::vec3 color) {
-    std::vector<e172vp::Vertex> result(vertices.size());
-    for(size_t i = 0; i < vertices.size(); ++i) {
-        result[i] = { vertices[i], color, texCoords[i] };
-    }
-    return result;
-}
-
-vk::VertexInputBindingDescription e172vp::Vertex::bindingDescription() {
+vk::VertexInputBindingDescription Vertex::bindingDescription()
+{
     vk::VertexInputBindingDescription bindingDescription{};
     bindingDescription.binding = 0;
     bindingDescription.stride = sizeof(Vertex);
     bindingDescription.inputRate = vk::VertexInputRate::eVertex;
 
     return bindingDescription;
+}
+
 }

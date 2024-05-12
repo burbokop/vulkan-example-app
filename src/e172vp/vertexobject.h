@@ -1,31 +1,65 @@
-#ifndef VERTEXOBJECT_H
-#define VERTEXOBJECT_H
+#pragma once
 
-#include "vertex.h"
 #include "descriptorsetlayout.h"
+#include "utils/NoNull.h"
+#include <glm/glm.hpp>
+#include <memory>
 
 namespace e172vp {
+
 class GraphicsObject;
 class Renderer;
+class Pipeline;
+class Mesh;
+
 class VertexObject {
     friend Renderer;
-    GraphicsObject *m_graphicsObject = nullptr;
 
-    static inline const glm::mat4 sm = {
-               { 1, 0, 0, 0 },
-               { 0, 1, 0, 0 },
-               { 0, 0, 1, 0 },
-               { 0, 0, 0, 1 }
-           };
+    static constexpr glm::mat4 sm = {
+        { 1, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, 1 }
+    };
 
+    ~VertexObject();
+    VertexObject(
+        const e172vp::GraphicsObject* graphicsObject,
+        size_t imageCount,
+        const DescriptorSetLayout* descriptorSetLayout,
+        const DescriptorSetLayout* samplerDescriptorSetLayout,
+        const Mesh& mesh,
+        const vk::ImageView& imageView,
+        Shared<Pipeline> pipeline);
+
+private:
+    struct UniformBufferObject {
+        glm::mat4 model;
+    };
+
+public:
+    GraphicsObject *graphicsObject() const;
+    std::vector<vk::DescriptorSet> descriptorSets() const;
+    vk::Buffer vertexBuffer() const;
+    vk::Buffer indexBuffer() const;
+    uint32_t indexCount() const;
+    const auto& pipeline() const { return m_pipeline; }
+
+    void updateUbo(int imageIndex);
+    glm::mat4 rotation() const;
+    void setRotation(const glm::mat4 &rotation);
+    glm::mat4 translation() const;
+    void setTranslation(const glm::mat4 &translation);
+    glm::mat4 scale() const;
+    void setScale(const glm::mat4 &scale);
+    std::vector<vk::DescriptorSet> textureDescriptorSets() const;
+
+private:
     glm::mat4 m_rotation = sm;
     glm::mat4 m_translation = sm;
     glm::mat4 m_scale = sm;
 
-    struct ubo {
-        glm::mat4 model;
-    };
-
+    GraphicsObject* m_graphicsObject = nullptr;
 
     vk::Buffer m_vertexBuffer;
     vk::DeviceMemory m_vertexBufferMemory;
@@ -36,24 +70,8 @@ class VertexObject {
 
     std::vector<vk::DescriptorSet> m_descriptorSets;
     std::vector<vk::DescriptorSet> m_textureDescriptorSets;
-    uint32_t m_indexCount;
-    ~VertexObject();
-    VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const DescriptorSetLayout *samplerDescriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const vk::ImageView &imageView);
-public:
-    GraphicsObject *graphicsObject() const;
-    std::vector<vk::DescriptorSet> descriptorSets() const;
-    vk::Buffer vertexBuffer() const;
-    vk::Buffer indexBuffer() const;
-    uint32_t indexCount() const;
-
-    void updateUbo(int imageIndex);
-    glm::mat4 rotation() const;
-    void setRotation(const glm::mat4 &rotation);
-    glm::mat4 translation() const;
-    void setTranslation(const glm::mat4 &translation);
-    glm::mat4 scale() const;
-    void setScale(const glm::mat4 &scale);
-    std::vector<vk::DescriptorSet> textureDescriptorSets() const;
+    std::uint32_t m_indexCount;
+    Shared<Pipeline> m_pipeline;
 };
+
 }
-#endif // VERTEXOBJECT_H

@@ -1,9 +1,9 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <vulkan/vulkan.hpp>
-#include "../vertex.h"
 #include "../descriptorsetlayout.h"
+#include "../geometry/Vertex.h"
+#include <vulkan/vulkan.hpp>
 
 namespace e172vp {
 

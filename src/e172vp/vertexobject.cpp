@@ -1,20 +1,35 @@
 #include "vertexobject.h"
 
-#include "tools/buffer.h"
+#include "geometry/Mesh.h"
 #include "graphicsobject.h"
+#include "tools/buffer.h"
 
 std::vector<vk::DescriptorSet> e172vp::VertexObject::descriptorSets() const {
     return m_descriptorSets;
 }
 
-e172vp::VertexObject::VertexObject(const e172vp::GraphicsObject *graphicsObject, size_t imageCount, const DescriptorSetLayout *descriptorSetLayout, const DescriptorSetLayout *samplerDescriptorSetLayout, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const vk::ImageView &imageView) {
+e172vp::VertexObject::VertexObject(const e172vp::GraphicsObject* graphicsObject,
+    size_t imageCount,
+    const DescriptorSetLayout* descriptorSetLayout,
+    const DescriptorSetLayout* samplerDescriptorSetLayout,
+    const Mesh& mesh,
+    const vk::ImageView& imageView,
+    Shared<Pipeline> pipeline)
+    : m_pipeline(std::move(pipeline))
+{
     m_graphicsObject = const_cast<GraphicsObject*>(graphicsObject);
-    Buffer::createVertexBuffer(graphicsObject, vertices, &m_vertexBuffer, &m_vertexBufferMemory);
-    Buffer::createIndexBuffer(graphicsObject, indices, &m_indexBuffer, &m_indexBufferMemory);
-    Buffer::createUniformBuffers<ubo>(graphicsObject, imageCount, &m_uniformBuffers, &m_uniformBufferMemories);
-    Buffer::createUniformDescriptorSets<ubo>(graphicsObject->logicalDevice(), graphicsObject->descriptorPool(), m_uniformBuffers, descriptorSetLayout, &m_descriptorSets);
-    Buffer::createSamplerDescriptorSets(graphicsObject->logicalDevice(), graphicsObject->descriptorPool(), imageView, graphicsObject->sampler(), imageCount, samplerDescriptorSetLayout, &m_textureDescriptorSets);
-    m_indexCount = indices.size();
+    Buffer::createVertexBuffer(graphicsObject, mesh.vertices(), &m_vertexBuffer, &m_vertexBufferMemory);
+    Buffer::createIndexBuffer(graphicsObject, mesh.indices(), &m_indexBuffer, &m_indexBufferMemory);
+    Buffer::createUniformBuffers<UniformBufferObject>(graphicsObject, imageCount, &m_uniformBuffers, &m_uniformBufferMemories);
+    Buffer::createUniformDescriptorSets<UniformBufferObject>(graphicsObject->logicalDevice(), graphicsObject->descriptorPool(), m_uniformBuffers, descriptorSetLayout, &m_descriptorSets);
+    Buffer::createSamplerDescriptorSets(graphicsObject->logicalDevice(),
+                                        graphicsObject->descriptorPool(),
+                                        imageView,
+                                        graphicsObject->sampler(),
+                                        imageCount,
+                                        samplerDescriptorSetLayout,
+                                        &m_textureDescriptorSets);
+    m_indexCount = mesh.indices().size();
 }
 
 e172vp::GraphicsObject *e172vp::VertexObject::graphicsObject() const {
@@ -34,12 +49,14 @@ uint32_t e172vp::VertexObject::indexCount() const {
 }
 
 void e172vp::VertexObject::updateUbo(int imageIndex) {
-    ubo __ubo;
+
+    UniformBufferObject __ubo;
     __ubo.model = m_translation * m_rotation * m_scale;
 
     void* data;
-    vkMapMemory(m_graphicsObject->logicalDevice(), m_uniformBufferMemories[imageIndex], 0, sizeof(ubo), 0, &data);
-    memcpy(data, &__ubo, sizeof(ubo));
+    vkMapMemory(m_graphicsObject->logicalDevice(), m_uniformBufferMemories[imageIndex], 0, sizeof(UniformBufferObject), 0, &data);
+    assert(data);
+    memcpy(data, &__ubo, sizeof(UniformBufferObject));
     vkUnmapMemory(m_graphicsObject->logicalDevice(), m_uniformBufferMemories[imageIndex]);
 }
 
